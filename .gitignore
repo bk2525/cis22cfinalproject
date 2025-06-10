@@ -1,21 +1,49 @@
-# Eclipse files
-.project
-.classpath
-.settings
-/bin/
+# System, temp, and log files
+desktop.ini
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.swp
 
-# intellij files
-.idea
+# General output files
+*.class
+*.jar
+
+# Output/build directories
+# (IntelliJ, Eclipse, VS Code, NetBeans, Gradle, Maven, Ant)
+bin/
+build/
+dist/
+docs/
+out/
+reports/
+target/
+test-output/
+
+# IDE-specific metadata and settings
+# (IntelliJ, Eclipse, VS Code, NetBeans, Gradle, Maven, Ant, BlueJ)
+.idea/
+.vscode/
+nbproject/private/
+nbbuild/
+nbdist/
+.nb-gradle/
+.gradle/
 *.iml
-
-#bluej
+.classpath
+.project
+.settings/
 package.bluej
 *.ctxt
 
-# output files
-*.class
-
-# system files
-desktop.ini
-*.swp
-.DS_Store
+# Environment configuration files
+# It is unlikely that we will need an .env file to hold sensitive
+# configuration data, but best practice to ignore these just incase.
+.env
+.env.*
+*.env
+*.env.*
+config/*.json
+config/*.yml
+config/*.yaml
