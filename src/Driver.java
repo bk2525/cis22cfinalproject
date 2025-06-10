@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Scanner;
 
 /**
  * This class is responsible for driving the program
@@ -36,20 +37,25 @@ public class Driver {
 
         // Version validated and program can begin...
         
+        //Stephen L's testing code, feel free to remove
+        Scanner input = new Scanner(System.in);
+        while (true) {
+        	System.out.println("Enter a string: ");
+        	System.out.println(removeWords(input.nextLine()));
+        }
         
-        //word remover
         
 
     }
     
-    private final ArrayList<String> REMOVED_WORDS = new ArrayList<>(Arrays.asList(
+    private final static ArrayList<String> REMOVED_WORDS = new ArrayList<>(Arrays.asList(
     	    "a", "am", "and", "as", "at", "by", "but", "for", "i", "id", "if", "ill", "im",
     	    "in", "is", "it", "its", "ive", "me", "my", "ooh", "of", "oh", "on", "or", "so",
     	    "the", "that", "theyve", "to", "too", "us", "we", "we're", "ya", "yeah", "you",
-    	    "youll", "youre", "youve", "your"
+    	    "youll", "youre", "youve", "your", "was", "were", "they", "youd"
     	));
     
-    public String removeWords(String input) {
+    public static String removeWords(String input) {
     	input = input.replaceAll("[^a-zA-Z0-9\\s]", "").toLowerCase();  //remove all punctuation, case insensitive
         ArrayList<String> words = new ArrayList<>(Arrays.asList(input.split("\\s+"))); //split the input into individual pieces into an arraylist
 
