@@ -42,7 +42,12 @@ public class Driver {
 
     }
     
-    private final ArrayList<String> REMOVED_WORDS = new ArrayList<>(Arrays.asList(/* TODO:  ENTER WORDS HERE */));
+    private final ArrayList<String> REMOVED_WORDS = new ArrayList<>(Arrays.asList(
+    	    "a", "am", "and", "as", "at", "by", "but", "for", "i", "id", "if", "ill", "im",
+    	    "in", "is", "it", "its", "ive", "me", "my", "ooh", "of", "oh", "on", "or", "so",
+    	    "the", "that", "theyve", "to", "too", "us", "we", "we're", "ya", "yeah", "you",
+    	    "youll", "youre", "youve", "your"
+    	));
     
     public String removeWords(String input) {
     	input = input.replaceAll("[^a-zA-Z0-9\\s]", "").toLowerCase();  //remove all punctuation, case insensitive
