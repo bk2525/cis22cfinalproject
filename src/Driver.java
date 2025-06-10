@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+
 /**
  * This class is responsible for driving the program
  */
@@ -32,8 +35,37 @@ public class Driver {
         }
 
         // Version validated and program can begin...
+        
+        
+        //word remover
+        
 
     }
+    
+    private final ArrayList<String> REMOVED_WORDS = new ArrayList<>(Arrays.asList(/* TODO:  ENTER WORDS HERE */));
+    
+    public String removeWords(String input) {
+    	input = input.replaceAll("[^a-zA-Z0-9\\s]", "").toLowerCase();  //remove all punctuation, case insensitive
+        ArrayList<String> words = new ArrayList<>(Arrays.asList(input.split("\\s+"))); //split the input into individual pieces into an arraylist
+
+        ArrayList<String> filteredWords = new ArrayList<>(); //arraylist to hold the valid words
+        
+        for (String word : words) {
+            boolean shouldRemove = false;
+            for (String removed : REMOVED_WORDS) {
+                if (word.equals(removed)) {
+                    shouldRemove = true;
+                    break;
+                }
+            }
+            if (!shouldRemove) {
+                filteredWords.add(word);
+            }
+        }
+        return String.join(" ", filteredWords);
+    }
+    
+    
 
     /**
      * Checks whether the user's Java Runtime Environment is a version
