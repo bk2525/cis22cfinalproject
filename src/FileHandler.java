@@ -1,15 +1,18 @@
+/**
+ * FileHandler.java
+ * @author Stephen Kyker
+ * CIS 22C, Group Project
+ */
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 /**
- * FileHandler Class
- * Handles the I/O logic
- *
- * @author Stephen Kyker
+ * Handles logic related to file management and file I/O operations.
+ * Implements AutoCloseable to support use within try-with-resources.
  */
 public class FileHandler implements AutoCloseable {
-
     /**
      * Default Constructor
      * @throws Exception if a general exception occurs
