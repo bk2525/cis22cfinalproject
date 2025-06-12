@@ -5,11 +5,18 @@
  */
 public class Song {
     private String title;  // Unique key
-    private String album;
     private int year;
+    private String album;
     private String lyrics;
 
     /** CONSTRUCTORS **/
+
+    public Song(String title, int year, String album, String lyrics) {
+        this.title = title;
+        this.year = year;
+        this.album = album;
+        this.lyrics = lyrics;
+    }
 
     /** ACCESSRORS **/
 
