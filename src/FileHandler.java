@@ -59,10 +59,12 @@ public class FileHandler implements AutoCloseable {
         this.sortFilesByName(files);
 
         // Read all files in the directory that match the pattern
+        // and prepend the file count at the very end
+        int count = 0;
         for (File file : files) {
             String fileName = file.getName();
             String header = "[START OF '" + fileName + "']\n";
-            String footer = "[END OF '" + fileName + "']\n\n";
+            String footer = "[END OF '" + fileName + "']\n";
             if (file.isFile() &&
                 fileName.startsWith(filePrefix) &&
                 fileName.endsWith(fileSuffix)) {
@@ -70,8 +72,10 @@ public class FileHandler implements AutoCloseable {
                     .append(header)
                         .append(readFile(file))
                             .append(footer);
+                count++;
             }
         }
+        rawData.insert(0, String.format("File count: %d%n", count));
 
         return rawData.toString();
     }
@@ -184,3 +188,4 @@ public class FileHandler implements AutoCloseable {
       // that will need to be cleaned up here
    }
 }
+
