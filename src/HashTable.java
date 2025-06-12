@@ -79,9 +79,7 @@ public class HashTable<T> {
      * @param element the element to check
      * @return if it contains the element 
      */
-    public boolean contains(T element) {
-    	return find(element) != -1;
-    }
+    public boolean contains(T element) { return find(element) != -1; }
     
     /**
      * returns load factor: numElements / numBuckets
