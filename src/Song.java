@@ -1,9 +1,10 @@
 /**
  * Represents a single Adele song, storing its title, album, year, and lyrics.
- *  UNFINISHED, STILL NEEDS CONSTRUCTORS ADDITIONAL CHANGES
+ * Implements Comparable based on the title (case-insensitive).
  * @author Kaylee Bui
+ * CIS 22C, Group Project
  */
-public class Song {
+public class Song implements Comparable<Song> {
     private String title;  // Unique key
     private int year;
     private String album;
@@ -11,6 +12,13 @@ public class Song {
 
     /** CONSTRUCTORS **/
 
+    /**
+     * Constructs a new Song object with all fields initialized.
+     * @param title the unique title of the song
+     * @param year the release year of the song
+     * @param album the album name
+     * @param lyrics the full lyrics of the song
+     */
     public Song(String title, int year, String album, String lyrics) {
         this.title = title;
         this.year = year;
@@ -18,7 +26,7 @@ public class Song {
         this.lyrics = lyrics;
     }
 
-    /** ACCESSRORS **/
+    /** ACCESSORS **/
 
     /**
      * Returns the title of the song.
@@ -86,7 +94,26 @@ public class Song {
         this.lyrics = lyrics;
     }
 
-    /** ADDITIONAL OPPERATIONS **/
+    /** ADDITIONAL OPERATIONS **/
+
+    /**
+     * Compares this song to another based on their titles, ignoring case.
+     * @param other the other Song to compare to
+     * @return a negative, zero, or positive number
+     */
+    @Override
+    public int compareTo(Song other) {
+        return title.compareToIgnoreCase(other.title);
+    }
+
+    /**
+     * Returns the hash code of the song, based on its lowercase title.
+     * @return the hash code
+     */
+   @Override
+   public int hashCode() {
+       return title.toLowerCase().hashCode();
+   }
 
     /**
      * Compare this title to another object for equality
@@ -102,7 +129,7 @@ public class Song {
             return false;
         }
         Song song = (Song) obj;
-        return title.equals(song.title);
+        return title.equalsIgnoreCase(song.title);
     }
 
     /**
