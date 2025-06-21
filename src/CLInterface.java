@@ -23,8 +23,8 @@ public class CLInterface {
     private static final Scanner keyboardInput = new Scanner(System.in);
 
     /**
-     * Default Constructor - does not do anything, but explicitly
-     * implemented for visibility.
+     * Default Constructor - does not do anything more than the implicit default constructor,
+     * but is explicitly implemented for visibility.
      */
     public CLInterface() {}
 
@@ -72,6 +72,32 @@ public class CLInterface {
             ImportSongs.fetchSongs();
         } catch (Exception e) {
             System.err.println(e.getMessage());
+        }
+
+        int userSelection;
+        String appTitle = "AMSE";
+        String mainMenuTitle = "Main Menu";
+        String[] mainMenuRows = {
+            "[option 1 stub]",
+            "[option 2 stub]",
+            "[option 3 stub]",
+            "[option 4 stub]",
+            "Exit"
+        };
+
+        // Launch the main menu loop and capture user input
+        Menu mainMenu = new Menu(CLInterface.keyboardInput, appTitle, mainMenuTitle, mainMenuRows);
+        boolean exit = false;
+        while (!exit) {
+            mainMenu.display();
+            userSelection = Menu.getSelection(mainMenuRows.length);
+
+            if (userSelection == 5) {
+                System.out.println("Exiting...");
+                exit = true;
+            } else {
+                System.out.println("[Action Handler Stub]: Menu option " + userSelection + " was selected.");
+            }
         }
     }
 }
@@ -151,29 +177,38 @@ class ImportSongs {
                 e.getMessage()));
         }
 
-        // Filter the stop words out
+
+        // Mem cache the unfiltered lyrics for testing purposes
+        // and Filter the stop words out
+        int i = -1;
+        String[] unfilteredLyrics = new String[songs.length];
         for (Song song : songs) {
+            unfilteredLyrics[++i] = song.getLyrics();
             song.setLyrics(removeWords(song.getLyrics()));
         }
 
         // Print imported songs for debugging
-        // This will be removed before prod
+        // Commented out for now; remove before prod
+        /*
         int count = 0;
         for (Song song : songs) {
             System.out.println(String.format(
-                "Song #%d%n"
-                + " Title: %s%n"
-                + "  Year: %d%n"
-                + " Album: %s%n"
-                + "Lyrics: %s...%n",
+                "Data for Adele Song #%d:%n"
+                + "            Title: %s%n"
+                + "             Year: %d%n"
+                + "            Album: %s%n"
+                + "Unfiltered Lyrics: %s...%n"
+                + "  Filtered Lyrics: %s...%n",
                 ++count,
                 song.getTitle(),
                 song.getYear(),
                 song.getAlbum(),
+                unfilteredLyrics[count - 1]
+                    .substring(0, 32).trim(),
                 song.getLyrics()
                     .substring(0, 32).trim()));
         }
-
+        */
         return songs;
     }
 
@@ -181,7 +216,8 @@ class ImportSongs {
      * Takes a string of input and removes the words matching
      * ImportSongs.REMOVED_WORDS. Created by Stephen Lin; contact for
      * questions.
-     * @return the sanitized String
+     * @param input the String to modify
+     * @return the modified String
      */
     public static String removeWords(String input) {
         input = input.replaceAll("[^a-zA-Z0-9\\s]", "").toLowerCase();  //remove all punctuation, case insensitive
