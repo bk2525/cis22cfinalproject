@@ -121,7 +121,7 @@ public class CLInterface {
                 break;
             case 2:
                 System.out.println("actionHandler() Debug: 'Delete a record' was selected.");
-                //TODO
+                this.deleteRecord();
                 break;
             case 3:
                 System.out.println("actionHandler() Debug: 'Search for a record' was selected.");
@@ -157,6 +157,11 @@ public class CLInterface {
     private void addRecord() {
         System.out.print("Enter the name of a file containing a song you'd like to add: ");
         amse.addSong(keyboardInput.nextLine());
+    }
+    
+    private void deleteRecord() {
+        System.out.print("Enter the exact name of a song you'd like to delete: ");
+        amse.deleteSong(keyboardInput.nextLine());
     }
     
     

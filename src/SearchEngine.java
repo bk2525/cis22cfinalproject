@@ -124,6 +124,11 @@ public class SearchEngine {
     
     public void nameSearch(String name) {
     	Song song = new Song(name, 0, null, null);;
-    	System.out.println(songsMap.get(song));
+    	Song useful = songsMap.get(song);
+    	if (useful == null) {
+    		System.out.println("There are no songs with that exact name. ");
+    		return;
+    	}
+    	System.out.println(useful);
     }
 }
