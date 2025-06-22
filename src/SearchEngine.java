@@ -1,37 +1,50 @@
 import java.util.*;
 import java.io.File;
 
-/**
- * SearchEngine builds an inverted index using BSTs and allows keyword searches over Song lyrics.
- * Includes direct song access via HashTable and file-based song addition.
- */
 public class SearchEngine {
-    // maps each unique word to its WordID (word + assigned ID)
     private final HashTable<WordID> wordMap;
-    // stores all songs by title for direct access
     private final HashTable<Song> songsMap;
-    // for each word ID, a BST of Songs containing that word
     private final ArrayList<BST<Song>> invertedIndex;
 
-    /**
-     * Constructs a SearchEngine with default capacity
-     */
     public SearchEngine() {
         this.wordMap = new HashTable<>(4096);
         this.songsMap = new HashTable<>(4096);
         this.invertedIndex = new ArrayList<>();
     }
 
-    
     public void addSong(String fileName) {
         Song song = createSongFromFile(fileName);
         songsMap.add(song);
         indexSong(song);
     }
 
-    /**
-     * Creates Song object from properly formatted file
-     */
+    public boolean deleteSong(String title) {
+        Song songToDelete = new Song(title, 0, null, null);
+        Song existingSong = songsMap.get(songToDelete);
+        if (existingSong == null) {
+            return false;
+        }
+        
+        // Remove from songsMap
+        songsMap.delete(existingSong);
+        
+        // Remove from inverted index
+        ArrayList<String> words = new ArrayList<>();
+        Scanner stringScanner = new Scanner(existingSong.getLyrics());
+        while (stringScanner.hasNext()) {
+            String word = stringScanner.next();
+            if (!words.contains(word)) {
+                words.add(word);
+                WordID wordId = wordMap.get(new WordID(word, 0));
+                if (wordId != null) {
+                    BST<Song> songTree = invertedIndex.get(wordId.getId());
+                    songTree.remove(existingSong, new SongNameComparator());
+                }
+            }
+        }
+        return true;
+    }
+
     private Song createSongFromFile(String fileName) {
         try {
             Scanner fileScanner = new Scanner(new File(fileName));
@@ -47,7 +60,6 @@ public class SearchEngine {
             throw new RuntimeException("Error reading song file: " + fileName, e);
         }
     }
-
 
     public void buildIndex(Song[] songs) {
         int nextId = 0;
@@ -68,11 +80,8 @@ public class SearchEngine {
         }
     }
 
-    /**
-     * Indexes a single Song by inserting it into each BST corresponding to its keywords
-     */
     private void indexSong(Song song) {
-        ArrayList<String> words = new ArrayList<String>();
+        ArrayList<String> words = new ArrayList<>();
         Scanner stringScanner = new Scanner(song.getLyrics());
         while (stringScanner.hasNext()) {
             String word = stringScanner.next();
@@ -86,7 +95,6 @@ public class SearchEngine {
         }
     }
 
-    
     public void search(String keyword) {
         WordID wordId = wordMap.get(new WordID(keyword, 0));
         if (wordId == null) {
