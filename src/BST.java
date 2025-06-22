@@ -423,7 +423,7 @@ public class BST<T> {
    private void inOrderString(Node node, StringBuilder inOrder) {
 	   if (node != null) {
 		   inOrderString(node.left, inOrder);
-		   inOrder.append(node.data + " ");
+		   inOrder.append(node.data + "\n");
 		   inOrderString(node.right, inOrder);
 	   }
    }

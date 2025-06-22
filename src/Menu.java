@@ -397,6 +397,7 @@ public class Menu {
             System.out.print("   Select an option: ");
             try {
                 selection = keyboardInput.nextInt();
+                keyboardInput.nextLine();
                 isValidSelection = (
                     selection > 0 && selection <= optionCount);
                 if (!isValidSelection) {

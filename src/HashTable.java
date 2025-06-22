@@ -49,7 +49,7 @@ public class HashTable<T> {
      * @return the hash
      */
     private int hash(T obj) {
-    	return obj.hashCode() % table.size();
+		return Math.abs(obj.hashCode() % table.size());
     }
 
     /** Accessors */

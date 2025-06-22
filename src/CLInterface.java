@@ -21,6 +21,7 @@ public class CLInterface {
      * closed manually or via AutoCloseable (e.g., try-with-resources).
      */
     private static final Scanner keyboardInput = new Scanner(System.in);
+    private SearchEngine amse;
 
     /**
      * Default Constructor - does not do anything more than the implicit default constructor,
@@ -69,9 +70,11 @@ public class CLInterface {
      */
     private void runSession() {
         try {
-            ImportSongs.fetchSongs();
+            this.amse = new SearchEngine();
+            this.amse.buildIndex(ImportSongs.fetchSongs());
         } catch (Exception e) {
             System.err.println(e.getMessage());
+            return;
         }
 
         int userSelection;
@@ -108,6 +111,7 @@ public class CLInterface {
      * @param userSelection the menu selection made by the user
      * @param mainMenu the menu context
      * @return T if user would like to exit, F if not.
+     * @throws NullPointerException when this.amse == null
      */
     private boolean actionHandler(int userSelection, Menu mainMenu) {
         switch (userSelection) {
@@ -119,6 +123,9 @@ public class CLInterface {
                 break;
             case 3:
                 System.out.println("actionHandler() Debug: 'Search for a record' was selected.");
+                if (this.amse == null) {
+                    throw new NullPointerException("actionHandler(): Class member 'amse' cannot be null.");
+                }
                 this.recordSearch(mainMenu);
                 break;
             case 4:
@@ -169,6 +176,9 @@ public class CLInterface {
                     break;
                 case 2:
                     System.out.println("recordSearch() Debug: 'Find and display records using keywords' was selected.");
+                    System.out.print("Please enter the keyword to search for: ");
+                    this.amse.search(keyboardInput.nextLine());
+                    System.out.println(); // line break
                     break;
                 case 3:
                     System.out.println("recordSearch() Debug: 'Return to Main Menu' was selected.");
