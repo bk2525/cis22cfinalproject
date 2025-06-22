@@ -4,6 +4,7 @@ import java.io.File;
 /**
  * SearchEngine builds an inverted index using BSTs and allows keyword searches over Song lyrics.
  * Includes direct song access via HashTable and supports adding/deleting songs.
+ * 
  */
 public class SearchEngine {
     // maps each unique word to its WordID (word + assigned ID)
