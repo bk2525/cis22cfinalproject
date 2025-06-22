@@ -44,7 +44,7 @@ public class SearchEngine {
             if (isValidWord(word) && processedWords.add(word)) {
                 WordID wordId = wordMap.get(new WordID(word, 0));
                 if (wordId != null) {
-                    invertedIndex.get(wordId.getId()).insert(song);
+                    invertedIndex.get(wordId.getId()).insert(song, new SongNameComparator());
                 }
             }
         }

@@ -1,3 +1,5 @@
+import java.util.Comparator;
+
 /**
  * Represents a single Adele song, storing its title, album, year, and lyrics.
  * Implements Comparable based on the title (case-insensitive).
@@ -149,4 +151,15 @@ public class Song implements Comparable<Song> {
                 ", Album: " + albumText +
                 ", Year: " + year;
     }
+    
+    
+}
+
+class SongNameComparator implements Comparator<Song>{
+
+	@Override
+	public int compare(Song o1, Song o2) {
+		return o1.getTitle().compareTo(o2.getTitle());
+	}
+	
 }
