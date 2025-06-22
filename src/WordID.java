@@ -1,42 +1,32 @@
+import java.util.Objects;
+
 /**
- * Simple pair of a word and its assigned integer ID.
- * @author Jeses Louis
+ * Maps a lowercase word to a unique integer ID for inverted indexing.
+ * Equality and hashcode are based only on the word (case-insensitive).
  */
 public class WordID {
-    private String word;
-    private int id;
+    private final String word;  
+    private final int id;
 
-    /**
-     * @param word the keyword
-     * @param id   the integer index for that keyword in the inverted index
-     */
     public WordID(String word, int id) {
         this.word = word.toLowerCase();
-        this.id   = id;
+        this.id = id;
     }
 
-    /** Returns the keyword. */
-    public String getWord() {
-        return word;
-    }
-
-    /** Returns the assigned integer ID. */
-    public int getId() {
-        return id;
-    }
+    public String getWord() { return word; }
+    public int getId() { return id; }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof WordID)) return false;
-        WordID other = (WordID) obj;
-        return word.equals(other.word);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof WordID)) return false;
+        WordID other = (WordID) o;
+        return word.equalsIgnoreCase(other.word);  
     }
 
     @Override
     public int hashCode() {
-        // Hash only by the word, so lookup only requires matching word.
-        return word.hashCode();
+        return Objects.hash(word.toLowerCase());  
     }
 
     @Override
