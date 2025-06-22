@@ -117,9 +117,11 @@ public class CLInterface {
         switch (userSelection) {
             case 1:
                 System.out.println("actionHandler() Debug: 'Upload a new record' was selected.");
+                this.addRecord();
                 break;
             case 2:
                 System.out.println("actionHandler() Debug: 'Delete a record' was selected.");
+                //TODO
                 break;
             case 3:
                 System.out.println("actionHandler() Debug: 'Search for a record' was selected.");
@@ -130,9 +132,11 @@ public class CLInterface {
                 break;
             case 4:
                 System.out.println("actionHandler() Debug: 'Modify or update a record' was selected.");
+                //TODO
                 break;
             case 5:
                 System.out.println("actionHandler() Debug: 'Statistics' was selected.");
+                //TODO
                 // Display 3 different statistics about the data
                 break;
             case 6:
@@ -149,6 +153,13 @@ public class CLInterface {
         System.out.println("\nReturning to main menu...\n");
         return false;
     }
+    
+    private void addRecord() {
+        System.out.print("Enter the name of a file containing a song you'd like to add: ");
+        amse.addSong(keyboardInput.nextLine());
+    }
+    
+    
 
     /**
      * Searches for a single record using the primary key,
@@ -173,11 +184,14 @@ public class CLInterface {
             switch (userSelection) {
                 case 1:
                     System.out.println("recordSearch() Debug: 'Find and display a record by primary key' was selected.");
+                    System.out.print("Please enter the exact title of a song to search for: ");
+                    this.amse.nameSearch(keyboardInput.nextLine());
+                    System.out.println();
                     break;
                 case 2:
                     System.out.println("recordSearch() Debug: 'Find and display records using keywords' was selected.");
                     System.out.print("Please enter the keyword to search for: ");
-                    this.amse.search(keyboardInput.nextLine());
+                    this.amse.keyWordSearch(keyboardInput.nextLine());
                     System.out.println(); // line break
                     break;
                 case 3:

@@ -28,6 +28,7 @@ public class SearchEngine {
         songsMap.add(song);
         indexSong(song);
     }
+    
 
     /**
      * Creates Song object from properly formatted file
@@ -87,7 +88,7 @@ public class SearchEngine {
     }
 
     
-    public void search(String keyword) {
+    public void keyWordSearch(String keyword) {
         WordID wordId = wordMap.get(new WordID(keyword, 0));
         if (wordId == null) {
             System.out.println("No songs found for: " + keyword);
@@ -95,5 +96,10 @@ public class SearchEngine {
         }
         BST<Song> resultTree = invertedIndex.get(wordId.getId());
         System.out.println("Songs containing \"" + keyword + "\":\n" + resultTree.inOrderString());
+    }
+    
+    public void nameSearch(String name) {
+    	Song song = new Song(name, 0, null, null);;
+    	System.out.println(songsMap.get(song));
     }
 }

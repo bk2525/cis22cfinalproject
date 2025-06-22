@@ -175,6 +175,10 @@ public class Song implements Comparable<Song> {
      * @return the modified String
      */
     public static String removeWords(String input) {
+    	if (input == null) {
+    		return null;
+    	}
+    	
         input = input.replaceAll("[^a-zA-Z0-9\\s]", "").toLowerCase();  //remove all punctuation, case insensitive
         ArrayList<String> words = new ArrayList<>(Arrays.asList(input.split("\\s+"))); //split the input into individual pieces into an arraylist
 
