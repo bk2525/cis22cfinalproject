@@ -75,28 +75,109 @@ public class CLInterface {
         }
 
         int userSelection;
-        String appTitle = "AMSE";
+        String appTitle = "Adele Music Search Engine";
         String mainMenuTitle = "Main Menu";
         String[] mainMenuRows = {
-            "[option 1 stub]",
-            "[option 2 stub]",
-            "[option 3 stub]",
-            "[option 4 stub]",
-            "Exit"
+            "Upload a new record",
+            "Delete a record",
+            "Search for a record",
+            "Modify or update a record",
+            "Statistics",
+            "Quit"
         };
 
         // Launch the main menu loop and capture user input
+        System.out.println("[LAUNCHING THE ADELE MUSIC SEARCH ENGINE...]\n\n");
         Menu mainMenu = new Menu(CLInterface.keyboardInput, appTitle, mainMenuTitle, mainMenuRows);
         boolean exit = false;
         while (!exit) {
             mainMenu.display();
             userSelection = Menu.getSelection(mainMenuRows.length);
 
-            if (userSelection == 5) {
-                System.out.println("Exiting...");
+            if (this.actionHandler(userSelection, mainMenu)) {
                 exit = true;
-            } else {
-                System.out.println("[Action Handler Stub]: Menu option " + userSelection + " was selected.");
+            }
+        }
+
+        // Write all records to a file of user choice and exit
+        return;
+    }
+
+    /**
+     * Action handler for the Main Menu
+     * @param userSelection the menu selection made by the user
+     * @param mainMenu the menu context
+     * @return T if user would like to exit, F if not.
+     */
+    private boolean actionHandler(int userSelection, Menu mainMenu) {
+        switch (userSelection) {
+            case 1:
+                System.out.println("actionHandler() Debug: 'Upload a new record' was selected.");
+                break;
+            case 2:
+                System.out.println("actionHandler() Debug: 'Delete a record' was selected.");
+                break;
+            case 3:
+                System.out.println("actionHandler() Debug: 'Search for a record' was selected.");
+                this.recordSearch(mainMenu);
+                break;
+            case 4:
+                System.out.println("actionHandler() Debug: 'Modify or update a record' was selected.");
+                break;
+            case 5:
+                System.out.println("actionHandler() Debug: 'Statistics' was selected.");
+                // Display 3 different statistics about the data
+                break;
+            case 6:
+                System.out.println("actionHandler() Debug: 'Quit' was selected.");
+                System.out.println("\nExiting program...\n");
+                return true;
+            default:
+                // No-op; input validation ensures
+                // this default is never used, but
+                // including for best practice
+                break;
+        }
+
+        System.out.println("\nReturning to main menu...\n");
+        return false;
+    }
+
+    /**
+     * Searches for a single record using the primary key,
+     * or for several records using keywords.
+     * @param menu the parent menu context
+     */
+    private void recordSearch(Menu menu) {
+        String appTitle = menu.getAppName();
+        String menuTitle = "Search Menu";
+        String[] menuRows = {
+            "Find and display a record by primary key",
+            "Find and display records using keywords",
+            "Return to Main Menu"
+        };
+
+        // We can pass null for the Scanner parameter since its static and was already set earlier
+        Menu searchMenu = new Menu(null, appTitle, menuTitle, menuRows);
+        boolean returnToParent = false;
+        while (!returnToParent) {
+            searchMenu.display();
+            int userSelection = Menu.getSelection(menuRows.length);
+            switch (userSelection) {
+                case 1:
+                    System.out.println("recordSearch() Debug: 'Find and display a record by primary key' was selected.");
+                    break;
+                case 2:
+                    System.out.println("recordSearch() Debug: 'Find and display records using keywords' was selected.");
+                    break;
+                case 3:
+                    System.out.println("recordSearch() Debug: 'Return to Main Menu' was selected.");
+                    returnToParent = true;
+                default:
+                    // No-op; input validation ensures
+                    // this default is never used, but
+                    // including for best practice
+                    break;
             }
         }
     }

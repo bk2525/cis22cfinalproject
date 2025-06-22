@@ -21,13 +21,21 @@ public class Menu {
 
     /* [---CONSTRUCTORS---] */
     /**
-     * Default Constructor - explicitly disabled.
-     * @throws UnsupportedOperationException if called
+     * Zero-arg Constructor - If Menu.keyboardInput != null, set remaining member vars to default values;
+     * Defaults set:
+     *   appName = "UNTITLED APP"
+     *   header = "UNTITLED MENU"
+     *   rows = Empty ArrayList with a size of 1
+     * @throws NullPointerException when keyboardInput has not been defined
      */
-    public Menu() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException(
-                "Menu(): This class does not support zero-argument instantiation."
-        );
+    public Menu() {
+        if (Menu.keyboardInput == null) {
+            throw new NullPointerException("Menu(): Static member 'keyboardInput' is null.");
+        }
+
+        this.appName = "UNTITLED APP";
+        this.header = "UNTITLED MENU";
+        this.rows = new ArrayList<String>(1);
     }
 
     /**
@@ -40,10 +48,14 @@ public class Menu {
      * @throws IllegalArgumentException When keyboardInput == null
      */
     public Menu (Scanner keyboardInput)  throws IllegalArgumentException {
-        if (keyboardInput == null) {
-            throw new IllegalArgumentException("Menu(): 'keyboardInput' is null.");
+        // If first object, instantiate the keyboard input, otherwise no need
+        if (Menu.keyboardInput == null) {
+            if (keyboardInput == null) {
+                throw new IllegalArgumentException("Menu(): 'keyboardInput' is null.");
+            }
+            Menu.keyboardInput = keyboardInput;
         }
-        Menu.keyboardInput = keyboardInput;
+
         this.appName = "UNTITLED APP";
         this.header = "UNTITLED MENU";
         this.rows = new ArrayList<String>(1);
@@ -294,25 +306,71 @@ public class Menu {
     /* [---PRINTERS---] */
     /**
      * Prints the menu to System.out
+     * Note: attempts to format rows around a 72 char max,
+     * but does allow overflowing the max
      */
     public void display() {
-        // Print the title and title borders
-        System.out.print("=".repeat(20));
-        System.out.print("| " + this.appName.toUpperCase() + " |");
-        System.out.println("=".repeat(20));
+        // Assess the width of appName and header
+        // to calculate border padding; using 72 char
+        // for the max width of a line as it's
+        // a well known terminal standard.
+        final int MAX_WIDTH = 72;
+        final int LEFT_INDENT = 21;
+        final String STAR = "(*)";
 
-        // Print the header and header borders
-        System.out.print("-".repeat(20));
-        System.out.print("| " + this.header.toUpperCase() + " |");
-        System.out.println("-".repeat(20));
+        int appNameRowRemainder = MAX_WIDTH - this.appName.length();
+        int headerRowRemainder = MAX_WIDTH - this.header.length();
+
+        // Will add +1 to right side during print if row remainder was odd
+        int appNamePadding = (appNameRowRemainder / 2);
+        int headerPadding = (headerRowRemainder / 2);
+
+        // Catch overflow case, but allow it and disable padding
+        // "2" to account for "| " or " |"
+        if (appNamePadding < 2) {
+            appNamePadding = 2;
+        }
+        if (headerPadding < 2) {
+            headerPadding = 2;
+        }
+
+        // Concat the appName row
+        String appNameRow = "";
+        appNameRow += STAR + "- ".repeat((appNamePadding - STAR.length()) / 2);
+        appNameRow += this.appName.toUpperCase();
+        appNameRow += " -".repeat((appNamePadding - STAR.length()) / 2);
+        // Add a space to the right side's padding if the remainder was odd
+        if (appNameRowRemainder % 2 != 0) {
+            appNameRow += " ";
+        }
+        appNameRow += STAR;
+
+        // Concat the header row
+        String headerRow = "";
+        headerRow += STAR + " ".repeat(LEFT_INDENT - STAR.length());
+        headerRow += ("[ " + this.header.toUpperCase() + " ]");
+
+        // Calculate end padding for header row
+        int repeatCount = headerRowRemainder
+            - LEFT_INDENT
+            - ("[  ]".length())
+            - (STAR.length());
+        headerRow += " ".repeat(repeatCount) + STAR;
+
+        // Print the appName and header rows
+        System.out.println(STAR.repeat(MAX_WIDTH / STAR.length()));
+        System.out.println(appNameRow);
+        System.out.println(STAR.repeat(MAX_WIDTH / STAR.length()));
+        System.out.println(headerRow);
 
         // Print the menu options
-        int index = 1;
+        int index = 0;
         for (String row : rows) {
-            System.out.println(index + ". " + row);
-            index++;
+            row = (STAR + " ".repeat(LEFT_INDENT - STAR.length()) + ++index + ". " + row);
+            repeatCount = MAX_WIDTH - row.length() - STAR.length();
+            System.out.println(row + " ".repeat(repeatCount) + STAR);
         }
-        System.out.println("-".repeat(53));
+        System.out.println(STAR + "-".repeat(MAX_WIDTH - 6) + STAR);
     }
 
     /* [---INPUT HANDLER---] */
@@ -336,7 +394,7 @@ public class Menu {
         int selection = 0;
         boolean isValidSelection = false;
         while (!isValidSelection) {
-            System.out.print("Select an option: ");
+            System.out.print("   Select an option: ");
             try {
                 selection = keyboardInput.nextInt();
                 isValidSelection = (
