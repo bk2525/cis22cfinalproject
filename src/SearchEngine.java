@@ -1,22 +1,34 @@
 import java.util.*;
 import java.io.File;
 
+/**
+ * SearchEngine builds an inverted index using BSTs and allows keyword searches over Song lyrics.
+ * Includes direct song access via HashTable and supports adding/deleting songs.
+ */
 public class SearchEngine {
+    // maps each unique word to its WordID (word + assigned ID)
     private final HashTable<WordID> wordMap;
+    // stores all songs by title for direct O(1) access
     private final HashTable<Song> songsMap;
+    // for each word ID, a BST of Songs containing that word (inverted index)
     private final ArrayList<BST<Song>> invertedIndex;
 
+    /**
+     * Constructs a SearchEngine with default capacity
+     */
     public SearchEngine() {
         this.wordMap = new HashTable<>(4096);
         this.songsMap = new HashTable<>(4096);
         this.invertedIndex = new ArrayList<>();
     }
 
+    
     public void addSong(String fileName) {
         Song song = createSongFromFile(fileName);
         songsMap.add(song);
         indexSong(song);
     }
+
 
     public boolean deleteSong(String title) {
         Song songToDelete = new Song(title, 0, null, null);
@@ -25,10 +37,10 @@ public class SearchEngine {
             return false;
         }
         
-        // Remove from songsMap
+        // Remove from primary storage
         songsMap.delete(existingSong);
         
-        // Remove from inverted index
+        // Remove from all inverted index entries
         ArrayList<String> words = new ArrayList<>();
         Scanner stringScanner = new Scanner(existingSong.getLyrics());
         while (stringScanner.hasNext()) {
@@ -45,7 +57,7 @@ public class SearchEngine {
         return true;
     }
 
-    private Song createSongFromFile(String fileName) {
+ Song createSongFromFile(String fileName) {
         try {
             Scanner fileScanner = new Scanner(new File(fileName));
             String title = fileScanner.nextLine();
@@ -61,6 +73,7 @@ public class SearchEngine {
         }
     }
 
+    
     public void buildIndex(Song[] songs) {
         int nextId = 0;
         for (Song song : songs) {
@@ -80,6 +93,7 @@ public class SearchEngine {
         }
     }
 
+  
     private void indexSong(Song song) {
         ArrayList<String> words = new ArrayList<>();
         Scanner stringScanner = new Scanner(song.getLyrics());
@@ -95,6 +109,7 @@ public class SearchEngine {
         }
     }
 
+    
     public void search(String keyword) {
         WordID wordId = wordMap.get(new WordID(keyword, 0));
         if (wordId == null) {
