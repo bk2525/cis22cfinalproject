@@ -196,8 +196,20 @@ public class Song implements Comparable<Song> {
     }
 }
 
+/**
+ * A comparator that compares Song objects based on their titles.
+ */
 class SongNameComparator implements Comparator<Song>{
 
+    /**
+     * Compares two Song objects by their titles using case-sensitive comparison.
+     *
+     * @param o1 the first Song to be compared
+     * @param o2 the second Song to be compared
+     * @return a negative integer if o1's title comes before o2's title,
+     *         zero if the titles are equal, or a positive integer if o1's title comes
+     *         after o2's title
+     */
 	@Override
 	public int compare(Song o1, Song o2) {
 		return o1.getTitle().compareTo(o2.getTitle());
