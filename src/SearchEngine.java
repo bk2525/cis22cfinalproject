@@ -29,9 +29,11 @@ public class SearchEngine {
         songsMap.add(song);
         indexSong(song);
     }
-    
 
-
+    public void addSong(Song song) {
+    	songsMap.add(song);
+    	indexSong(song);
+    }
     public boolean deleteSong(String title) {
         Song songToDelete = new Song(title, 0, null, null);
         Song existingSong = songsMap.get(songToDelete);
@@ -59,7 +61,7 @@ public class SearchEngine {
         return true;
     }
 
- Song createSongFromFile(String fileName) {
+    Song createSongFromFile(String fileName) {
         try {
             Scanner fileScanner = new Scanner(new File(fileName));
             String title = fileScanner.nextLine();
@@ -103,6 +105,7 @@ public class SearchEngine {
             String word = stringScanner.next();
             if (!words.contains(word)) {
                 words.add(word);
+                System.out.println(word);
                 WordID wordId = wordMap.get(new WordID(word, 0));
                 if (wordId != null) {
                     invertedIndex.get(wordId.getId()).insert(song, new SongNameComparator());
@@ -110,7 +113,12 @@ public class SearchEngine {
             }
         }
     }
+    
 
+    
+    public Song getSong(String name) {
+    	return songsMap.get(new Song(name, 0, null, null));
+    }
     
     public void keyWordSearch(String keyword) {
         WordID wordId = wordMap.get(new WordID(keyword, 0));

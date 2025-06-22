@@ -132,7 +132,7 @@ public class CLInterface {
                 break;
             case 4:
                 System.out.println("actionHandler() Debug: 'Modify or update a record' was selected.");
-                //TODO
+                this.modifyRecord();
                 break;
             case 5:
                 System.out.println("actionHandler() Debug: 'Statistics' was selected.");
@@ -162,6 +162,49 @@ public class CLInterface {
     private void deleteRecord() {
         System.out.print("Enter the exact name of a song you'd like to delete: ");
         amse.deleteSong(keyboardInput.nextLine());
+    }
+    
+    private void modifyRecord() {
+        System.out.print("Enter the exact name of a song you'd like to modify: ");
+        String name = keyboardInput.nextLine();
+        
+        Song song = amse.getSong(name);
+        if (song == null) {
+        	System.out.println("There is no song with that exact name. ");
+        	return;
+        }
+        amse.deleteSong(name);
+        
+        int year = song.getYear();
+        String album = song.getAlbum();
+        String lyrics = song.getLyrics();
+        
+        System.out.print("enter 1,2,3,4: ");
+        int choice = keyboardInput.nextInt();
+        keyboardInput.nextLine();
+        
+        switch (choice) {
+        	case 1: //if 1, modify name:
+        		System.out.print("Enter a new song name: ");
+                name = keyboardInput.nextLine();
+                break;
+        	case 2: //if 2, modify year:
+        		System.out.print("Enter a new year: ");
+        		year = keyboardInput.nextInt();
+                keyboardInput.nextLine();
+                break;
+        	case 3: //if 3, modify album
+        		System.out.print("Enter a new song album: ");
+                album = keyboardInput.nextLine();
+                break;
+        	case 4: //if 4, modify lyrics
+        		System.out.print("Enter new song lyrics: ");
+        		lyrics = keyboardInput.nextLine();
+        		System.out.println(lyrics);
+        		break;
+        }
+        amse.addSong(new Song(name, year, album, lyrics));
+        
     }
     
     
