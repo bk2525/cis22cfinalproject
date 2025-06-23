@@ -105,7 +105,6 @@ public class SearchEngine {
             String word = stringScanner.next();
             if (!words.contains(word)) {
                 words.add(word);
-                System.out.println(word);
                 WordID wordId = wordMap.get(new WordID(word, 0));
                 if (wordId != null) {
                     invertedIndex.get(wordId.getId()).insert(song, new SongNameComparator());
