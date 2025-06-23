@@ -118,6 +118,39 @@ public class SearchEngine {
     public Song getSong(String name) {
     	return songsMap.get(new Song(name, 0, null, null));
     }
+
+    /**
+     * Gets the number of songs in the HashTable
+     * Used as a statistic
+     * @return the number of songs in the HashTable songsMap
+     */
+    public int getSongCount() {
+        return this.songsMap.getNumElements();
+    }
+
+    /**
+     * Returns the number of unique words
+     * Used as a statistic
+     * @return the number of unique words in the HashTable wordMap
+     */
+    public int getTotalUniqueWords() {
+        return this.wordMap.getNumElements();
+    }
+
+    /**
+     * Gets the average Year for all the songs
+     * used for the statistic
+     * @return a year
+     */
+
+     public int getAverageYear() {
+        int sumYear = 0;
+        ArrayList<Song> songs = songsMap.getAllElements();
+        for (Song song: songs) {
+            sumYear += song.getYear();
+        }
+        return sumYear / songs.size();
+     }
     
     public void keyWordSearch(String keyword) {
         WordID wordId = wordMap.get(new WordID(keyword, 0));
@@ -138,4 +171,6 @@ public class SearchEngine {
     	}
     	System.out.println(useful);
     }
+
+    
 }

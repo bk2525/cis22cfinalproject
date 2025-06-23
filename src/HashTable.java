@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class HashTable<T> {
     private int numElements;
-    private ArrayList<LinkedList<T> > table;
+    private ArrayList<LinkedList<T>> table;
 
     /** Constructors */
     
@@ -139,6 +139,25 @@ public class HashTable<T> {
     	return null;
     }
 
+
+    /**
+     * Gets all the elements and add them into an ArrayList
+     * The hashTable contains all the songs
+     * @return an arrayList of elements, used for statistic
+     */
+    public ArrayList<T> getAllElements() {
+      ArrayList<T> elements = new ArrayList<>();
+      for (LinkedList<T> bucket : table) {
+        bucket.positionIterator();
+        while (!bucket.offEnd()) {
+          elements.add(bucket.getIterator());
+          bucket.advanceIterator();
+        }
+      }
+      return elements;
+    }
+
+    
     /** Mutators */
     /**
      * adds an element to the list

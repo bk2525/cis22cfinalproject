@@ -136,7 +136,9 @@ public class CLInterface {
                 break;
             case 5:
                 System.out.println("actionHandler() Debug: 'Statistics' was selected.");
-                //TODO
+                System.out.println("Statistic 1: Total number of songs: " + amse.getSongCount());
+                System.out.println("Statistic 2: Unique words: " + amse.getTotalUniqueWords());
+                System.out.println("Statistic 3: Average year of all songs " + amse.getAverageYear());
                 // Display 3 different statistics about the data
                 break;
             case 6:
