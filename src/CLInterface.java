@@ -169,43 +169,39 @@ public class CLInterface {
 		if (userSelection != 3) { // Don't print if entering the search sub menu
 			System.out.print("[" + mainMenu.getRows()[userSelection - 1] + "]\n");
 		}
-		switch (userSelection) {
-		case 1:
+
+		if (userSelection == 1) {
 			// System.out.println("actionHandler() Debug: 'Upload a new record' was
 			// selected.");
 			this.addRecord();
-			break;
-		case 2:
+		} else if (userSelection == 2) {
 			// System.out.println("actionHandler() Debug: 'Delete a record' was selected.");
 			this.deleteRecord();
-			break;
-		case 3:
+		} else if (userSelection == 3) {
 			// System.out.println("actionHandler() Debug: 'Search for a record' was
 			// selected.");
 			this.searchMenu(mainMenu);
 			return false;
-		case 4:
+		} else if (userSelection == 4) {
 			// System.out.println("actionHandler() Debug: 'Modify or update a record' was
 			// selected.");
 			this.modifyMenu(mainMenu);
 			return false;
-		case 5:
+		} else if (userSelection == 5) {
 			// System.out.println("actionHandler() Debug: 'Statistics' was selected.");
 			System.out.println("Statistic 1: Total number of songs: " + amse.getSongCount());
 			System.out.println("Statistic 2: Unique words: " + amse.getTotalUniqueWords());
 			System.out.println("Statistic 3: Average year of all songs " + amse.getAverageYear());
-			break;
-		case 6:
+		} else if (userSelection == 6) {
 			// System.out.println("actionHandler() Debug: 'Quit' was selected.");
 			this.printRecordsToFile();
 			System.out.print("\nPress \"Enter\" to Exit. ");
 			keyboardInput.nextLine();
 			return true;
-		default:
+		} else {
 			// No-op; input validation ensures
 			// this default is never used, but
 			// including for best practice
-			break;
 		}
 
 		System.out.print("\nPress \"Enter\" to return to the Main Menu. ");
@@ -252,14 +248,13 @@ public class CLInterface {
 			this.clearConsole();
 			searchMenu.display();
 			int userSelection = Menu.getSelection(menuRows.length);
-			switch (userSelection) {
-			case 1:
+
+			if (userSelection == 1) {
 				// System.out.println("recordSearch() Debug: 'Find and display a record by
 				// primary key' was selected.");
 				System.out.print("Please enter a primary key (a song's exact title) to search for a record: ");
 				this.amse.searchByKey(keyboardInput.nextLine().trim()); // Ignore trailing white space
-				break;
-			case 2:
+			} else if (userSelection == 2) {
 				// System.out.println("recordSearch() Debug: 'Find and display records using
 				// keywords' was selected.");
 				System.out.print("Please enter a keyword to search for one or more records: ");
@@ -271,18 +266,16 @@ public class CLInterface {
 				} else {
 					System.out.println("No songs found with lyrics containing the keyword '" + query + "'.");
 				}
-				break;
-			case 3:
+			} else if (userSelection == 3) {
 				// System.out.println("recordSearch() Debug: 'Return to Main Menu' was
 				// selected.");
 				returnToParent = true;
-				break;
-			default:
+			} else {
 				// No-op; input validation ensures
 				// this default is never used, but
 				// including for best practice
-				break;
 			}
+
 			if (!returnToParent && !resetMenu) {
 				System.out.print("\nPress \"Enter\" to return to the search menu. ");
 				keyboardInput.nextLine();
@@ -388,33 +381,27 @@ public class CLInterface {
 			modifyMenu.display();
 			System.out.printf("Modifying record for '%s'.%n", title);
 			int userSelection = Menu.getSelection(menuRows.length);
-			switch (userSelection) {
-			case 1:
+
+			if (userSelection == 1) {
 				System.out.print("Enter a new Title: ");
 				song.setTitle(keyboardInput.nextLine());
 				title = song.getTitle(); // Update the localized title
-				break;
-			case 2:
+			} else if (userSelection == 2) {
 				System.out.print("Enter a new Year: ");
 				song.setYear(keyboardInput.nextInt());
 				keyboardInput.nextLine(); // Clear new line out
-				break;
-			case 3:
+			} else if (userSelection == 3) {
 				System.out.print("Enter a new name for the Album: ");
 				song.setAlbum(keyboardInput.nextLine());
-				break;
-			case 4:
+			} else if (userSelection == 4) {
 				System.out.print("Enter new Lyrics: ");
 				song.setLyrics(keyboardInput.nextLine());
-				break;
-			case 5:
+			} else if (userSelection == 5) {
 				returnToParent = true;
-				break;
-			default:
+			} else {
 				// No-op; input validation ensures
 				// this default is never used, but
 				// including for best practice
-				break;
 			}
 
 			if (!returnToParent) {
