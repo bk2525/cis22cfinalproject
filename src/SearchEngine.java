@@ -3,7 +3,7 @@ import java.io.File;
 
 /**
  * Purpose: create a search engine to perform operations like adding, deleting, modifying, and looking up songs.
- * @author Naman Kumar
+ * @author Naman Kumar & Jeses Louis
  * CIS 22C, Final Project
  */
 
