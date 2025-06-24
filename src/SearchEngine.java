@@ -204,4 +204,23 @@ public class SearchEngine {
         BST<Song> resultTree = invertedIndex.get(wordId.getId());
         return resultTree;
     }
+
+    /**
+     * Returns a string representation of the Songs in the search engine.
+     * @return A formatted string containing all the records.
+     */
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+
+        ArrayList<Song> songs = this.songsMap.getAllElements();
+        int count = 0;
+        for (Song song : songs) {
+            result.append(String.format(
+                "[SONG RECORD #%d]%n%s%n",
+                ++count, song.toString()));
+        }
+
+        return result.toString();
+    }
 }
