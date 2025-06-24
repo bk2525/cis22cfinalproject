@@ -4,9 +4,6 @@
  * (suplemental authoring denoted in method javadoc comments)
  * CIS 22C, Group Project
  */
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -148,12 +145,12 @@ public class CLInterface {
                 break;
             case 3:
                 // System.out.println("actionHandler() Debug: 'Search for a record' was selected.");
-                this.recordSearch(mainMenu);
+                this.searchMenu(mainMenu);
                 return false;
             case 4:
                 // System.out.println("actionHandler() Debug: 'Modify or update a record' was selected.");
-                this.modifyRecord();
-                break;
+                this.modifyMenu(mainMenu);
+                return false;
             case 5:
                 // System.out.println("actionHandler() Debug: 'Statistics' was selected.");
                 System.out.println("Statistic 1: Total number of songs: " + amse.getSongCount());
@@ -186,7 +183,7 @@ public class CLInterface {
     // Deletes a record (Javadoc needed)
     private void deleteRecord() {
         System.out.print("Enter the primary key (a song's exact title) of a song you would like to delete: ");
-        this.amse.deleteSong(keyboardInput.nextLine().trim()); // Ignore trailing white space
+        this.amse.deleteSong(keyboardInput.nextLine().trim(), false); // Ignore trailing white space
     }
 
     /**
@@ -194,7 +191,7 @@ public class CLInterface {
      * or for several records using keywords.
      * @param menu the parent menu context
      */
-    private void recordSearch(Menu menu) {
+    private void searchMenu(Menu menu) {
         String appTitle = menu.getAppName();
         String menuTitle = "Search Menu";
         String[] menuRows = {
@@ -209,6 +206,7 @@ public class CLInterface {
 
         boolean returnToParent = false;
         while (!returnToParent) {
+            boolean resetMenu = false;
             this.clearConsole();
             searchMenu.display();
             int userSelection = Menu.getSelection(menuRows.length);
@@ -221,7 +219,14 @@ public class CLInterface {
                 case 2:
                     //System.out.println("recordSearch() Debug: 'Find and display records using keywords' was selected.");
                     System.out.print("Please enter a keyword to search for one or more records: ");
-                    this.amse.searchByKeyword(keyboardInput.nextLine().trim()); // Ignore trailing white space
+                    String query = keyboardInput.nextLine().trim(); // Ignore trailing white space
+                    BST<Song> results = this.amse.searchByKeyword(query);
+                    if (results != null) {
+                        this.searchResultsMenu(query, results, searchMenu);
+                        resetMenu = true;
+                    } else {
+                        System.out.println("No songs found with lyrics containing the keyword '" + query + "'.");
+                    }
                     break;
                 case 3:
                     // System.out.println("recordSearch() Debug: 'Return to Main Menu' was selected.");
@@ -233,7 +238,7 @@ public class CLInterface {
                     // including for best practice
                     break;
             }
-            if (!returnToParent) {
+            if (!returnToParent && !resetMenu) {
                 System.out.print("\nPress \"Enter\" to return to the search menu. ");
                 keyboardInput.nextLine();
             }
@@ -241,51 +246,144 @@ public class CLInterface {
         this.clearConsole();
     }
 
-    // Modifies a record (Javadoc needed)
-    private void modifyRecord() {
-        System.out.print("Enter the exact name of a song you'd like to modify: ");
-        String name = keyboardInput.nextLine();
-        
-        Song song = amse.getSong(name);
-        if (song == null) {
-            System.out.printf(
-                "The song titled '%s' could not be found in the search engine.%n", name);
-        	return;
+
+    /**
+     * Displays the results menu from a keyword search
+     * @param keyword the search query
+     * @param results the search results
+     * @param menu the parent menu context
+     */
+    private void searchResultsMenu(String keyword, BST<Song> results, Menu menu) {
+        String appTitle = menu.getAppName();
+        String menuTitle = "SEARCH RESULTS MENU";
+        String[] menuRows;
+
+        // Get result rows from results
+        int resultCount = results.getSize();
+
+        // Build the menu rows using the BST results
+        menuRows = new String[resultCount + 1]; // + 1 for Return option
+        int index = -1;
+        for (String row : results.inOrderString().split("\n")) {
+            if (row.trim().startsWith("Title: ")) {
+                menuRows[++index] = row.split(": ")[1].trim();
+            }
         }
-        amse.deleteSong(name);
-        
-        int year = song.getYear();
-        String album = song.getAlbum();
-        String lyrics = song.getLyrics();
-        
-        System.out.print("enter 1,2,3,4: ");
-        int choice = keyboardInput.nextInt();
-        keyboardInput.nextLine();
-        
-        switch (choice) {
-        	case 1: //if 1, modify name:
-        		System.out.print("Enter a new song name: ");
-                name = keyboardInput.nextLine();
-                break;
-        	case 2: //if 2, modify year:
-        		System.out.print("Enter a new year: ");
-        		year = keyboardInput.nextInt();
+        menuRows[++index] = "Return to the Search Menu";
+
+        // Generate the results summary
+        String plural = "s";
+        String article = "a";
+        if (resultCount == 1) {
+            plural = "";
+            article = "the";
+        }
+        String resultsSummary = String.format(
+            "   %d song%s found with lyrics containing the keyword '%s'.%n"
+            + "   See more information about %s result or return to the Search Menu.",
+            resultCount, plural, keyword, article);
+
+        // Pass null for the Scanner since its static and was set previously
+        Menu searchResultsMenu = new Menu(null, appTitle, menuTitle, menuRows);
+        searchResultsMenu.setBorderPattern(menu.getBorderPattern());
+
+        boolean returnToParent = false;
+        while (!returnToParent) {
+            this.clearConsole();
+            searchResultsMenu.display();
+            System.out.println(resultsSummary);
+            int userSelection = Menu.getSelection(menuRows.length);
+            if (userSelection == resultCount + 1) {
+                returnToParent = true;
+            } else {
+                Song songChoice = new Song(menuRows[userSelection - 1]);
+                System.out.println(results.search(songChoice, new SongNameComparator()));
+            }
+
+            if (!returnToParent) {
+                System.out.print("\nPress \"Enter\" to return to the Search Results menu. ");
                 keyboardInput.nextLine();
-                break;
-        	case 3: //if 3, modify album
-        		System.out.print("Enter a new song album: ");
-                album = keyboardInput.nextLine();
-                break;
-        	case 4: //if 4, modify lyrics
-        		System.out.print("Enter new song lyrics: ");
-        		lyrics = keyboardInput.nextLine();
-        		System.out.println(lyrics);
-        		break;
+            }
         }
-        amse.addSong(new Song(name, year, album, lyrics));
+        this.clearConsole();
     }
 
+    /**
+     * Modifies a record in the search engine.
+     * @param menu the parent menu context
+     */
+    private void modifyMenu(Menu menu) {
+        System.out.print("Enter the primary key (a song's exact title) of a song you would like to modify: ");
+        String title = keyboardInput.nextLine().trim();
 
+        Song song = amse.getSong(title);
+        if (song == null) {
+            System.out.printf(
+                "The song titled '%s' could not be found in the search engine.%n", title);
+            System.out.print("\nPress \"Enter\" to return to the Main Menu. ");
+            keyboardInput.nextLine();
+        	return;
+        }
+        amse.deleteSong(title, true); // Remove the original entry /quiet
+
+        // Display modify menu
+        String appTitle = menu.getAppName();
+        String menuTitle = "MODIFY SONG MENU";
+        String[] menuRows = {
+            "Update the Title",
+            "Update the Year",
+            "Update the Album",
+            "Update the Lyrics",
+            "Return to Main Menu"
+        };
+
+        // Pass null for the Scanner since its static and was set previously
+        Menu modifyMenu = new Menu(null, appTitle, menuTitle, menuRows);
+        modifyMenu.setBorderPattern(menu.getBorderPattern());
+
+        boolean returnToParent = false;
+        while (!returnToParent) {
+            this.clearConsole();
+            modifyMenu.display();
+            System.out.printf("Modifying record for '%s'.%n", title);
+            int userSelection = Menu.getSelection(menuRows.length);
+            switch (userSelection) {
+                case 1:
+                    System.out.print("Enter a new Title: ");
+                    song.setTitle(keyboardInput.nextLine());
+                    title = song.getTitle(); // Update the localized title
+                    break;
+                case 2:
+                    System.out.print("Enter a new Year: ");
+                    song.setYear(keyboardInput.nextInt());
+                    keyboardInput.nextLine(); // Clear new line out
+                    break;
+                case 3:
+                    System.out.print("Enter a new name for the Album: ");
+                    song.setAlbum(keyboardInput.nextLine());
+                    break;
+                case 4:
+                    System.out.print("Enter new Lyrics: ");
+                    song.setLyrics(keyboardInput.nextLine());
+                    break;
+                case 5:
+                    returnToParent = true;
+                    break;
+                default:
+                    // No-op; input validation ensures
+                    // this default is never used, but
+                    // including for best practice
+                    break;
+            }
+
+            if (!returnToParent) {
+                System.out.print("\nPress \"Enter\" to return to the Modify Menu. ");
+                keyboardInput.nextLine();
+            }
+        }
+        amse.addSong(song);
+        this.clearConsole();
+    }
 
     /**
      * Attempts to clear the console environment
@@ -367,38 +465,6 @@ class ImportSongs {
             throw new Exception("parse(): Failed to parse data.", e);
         }
 
-
-        // Mem cache the unfiltered lyrics for testing purposes
-        // and Filter the stop words out
-//        int i = -1;
-//        String[] unfilteredLyrics = new String[songs.length];
-//        for (Song song : songs) {
-//            unfilteredLyrics[++i] = song.getLyrics();
-//            song.setLyrics(song.getLyrics());
-//        }
-
-        // Print imported songs for debugging
-        // Commented out for now; remove before prod
-        /*
-        int count = 0;
-        for (Song song : songs) {
-            System.out.println(String.format(
-                "Data for Adele Song #%d:%n"
-                + "            Title: %s%n"
-                + "             Year: %d%n"
-                + "            Album: %s%n"
-                + "Unfiltered Lyrics: %s...%n"
-                + "  Filtered Lyrics: %s...%n",
-                ++count,
-                song.getTitle(),
-                song.getYear(),
-                song.getAlbum(),
-                unfilteredLyrics[count - 1]
-                    .substring(0, 32).trim(),
-                song.getLyrics()
-                    .substring(0, 32).trim()));
-        }
-        */
         return songs;
     }
 

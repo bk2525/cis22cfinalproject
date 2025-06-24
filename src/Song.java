@@ -12,9 +12,27 @@ public class Song implements Comparable<Song> {
     private String title;  // Unique key
     private int year;
     private String album;
-    private String lyrics;
+    private String unfilteredLyrics;
+    private String filteredLyrics;
+
 
     /** CONSTRUCTORS **/
+
+    /**
+     * Constructs a new Song object for search purposes;
+     * songCount and songNumber do not get updated as this
+     * creates a dummy object only.
+     * @param title the unique title of the song
+     */
+    public Song(String title) {
+        this.title = title;
+
+        // Dummy values:
+        this.year = 0;
+        this.album = "";
+        this.unfilteredLyrics = "";
+        this.filteredLyrics = "";
+    }
 
     /**
      * Constructs a new Song object with all fields initialized.
@@ -27,7 +45,8 @@ public class Song implements Comparable<Song> {
         this.title = title;
         this.year = year;
         this.album = album;
-        this.lyrics = removeWords(lyrics);
+        this.unfilteredLyrics = lyrics;
+        this.filteredLyrics = removeWords(lyrics);
     }
 
     /** ACCESSORS **/
@@ -57,11 +76,19 @@ public class Song implements Comparable<Song> {
     }
 
     /**
-     * Returns the lyrics of the song.
-     * @return The song's lyrics.
+     * Returns the unfiltered lyrics of the song.
+     * @return The song's unfiltered lyrics.
      */
-    public String getLyrics() {
-        return lyrics;
+    public String getUnfilteredLyrics() {
+        return unfilteredLyrics;
+    }
+
+    /**
+     * Returns the filtered lyrics of the song.
+     * @return The song's filtered lyrics.
+     */
+    public String getFilteredLyrics() {
+        return filteredLyrics;
     }
 
     /** MUTATORS **/
@@ -90,12 +117,15 @@ public class Song implements Comparable<Song> {
         this.year = year;
     }
 
+
     /**
      * Sets new lyrics for the song.
+     * Note: sets both unfiltered and filtered variables at the same time
      * @param lyrics The new lyrics.
      */
     public void setLyrics(String lyrics) {
-        this.lyrics = removeWords(lyrics);
+        this.unfilteredLyrics = lyrics;
+        this.filteredLyrics = removeWords(lyrics);
     }
 
     /** ADDITIONAL OPERATIONS **/
@@ -142,16 +172,40 @@ public class Song implements Comparable<Song> {
      */
     @Override
     public String toString() {
-        String albumText;
-        if (album != null) {
-            albumText = album;
-        } else {
-            albumText = "N/A";
+        final int MAX_WIDTH = 72;
+
+        StringBuilder wrappedLyrics = new StringBuilder();
+        String[] words = this.unfilteredLyrics.split("\\s+");
+        String attributeName = "Lyrics: ";
+        int currentLineLength = attributeName.length(); // Have to account for the attribute name that's returned later
+        int indentWidth = currentLineLength; // Indent each line to format the block respective to the attribute name
+
+        // Iterate each word, formatting in accordance with the block formatting
+        for (String word : words) {
+            // Add a new line and indent if running up to max width, otherwise just add a space
+            if (currentLineLength + word.length() + 1 > MAX_WIDTH) {
+                wrappedLyrics.append('\n');
+                wrappedLyrics.append(" ".repeat(indentWidth));
+                currentLineLength = indentWidth;
+            } else {
+                wrappedLyrics.append(' ');
+                currentLineLength++; // Accounting for the added space
+            }
+
+            // Add the new word to the string
+            wrappedLyrics.append(word);
+            currentLineLength += word.length();
         }
 
-        return "Title: " + title +
-                ", Album: " + albumText +
-                ", Year: " + year;
+        return String.format(
+            " Title: %s%n"
+            + "  Year: %d%n"
+            + " Album: %s%n"
+            + "Lyrics: %s%n",
+            this.title,
+            this.year,
+            this.album,
+            wrappedLyrics.toString().trim());
     }
     
     /**

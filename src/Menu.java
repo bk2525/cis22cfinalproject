@@ -399,6 +399,9 @@ public class Menu {
         for (String row : rows) {
             row = (this.borderPattern + " ".repeat(LEFT_INDENT - this.borderPattern.length()) + ++index + ". " + row);
             repeatCount = MAX_WIDTH - row.length() - this.borderPattern.length();
+            if (repeatCount < 0) {
+                repeatCount = 0;
+            }
             System.out.println(row + " ".repeat(repeatCount) + this.borderPattern);
         }
 

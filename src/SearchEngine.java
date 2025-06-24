@@ -48,22 +48,24 @@ public class SearchEngine {
     	indexSong(song);
     }
 
-    public void deleteSong(String title) {
+    // Param: boolean true if deleteting to modify an existing entry; suppresses print messages
+    public void deleteSong(String title, Boolean isModify) {
         // Find the song in the database
-        Song songToDelete = new Song(title, 0, null, null);
+        Song songToDelete = new Song(title);
         Song existingSong = songsMap.get(songToDelete);
+
         if (existingSong == null) {
             System.out.printf(
                 "The song titled '%s' could not be found in the search engine.%n", title);
             return;
         }
-        
+
         // Remove the song from primary storage
         songsMap.delete(existingSong);
         
         // Remove from all inverted index entries
         ArrayList<String> words = new ArrayList<>();
-        Scanner stringScanner = new Scanner(existingSong.getLyrics());
+        Scanner stringScanner = new Scanner(existingSong.getFilteredLyrics());
         while (stringScanner.hasNext()) {
             String word = stringScanner.next();
             if (!words.contains(word)) {
@@ -80,6 +82,15 @@ public class SearchEngine {
                     }
                 }
             }
+        }
+
+        // Print a summary message if removing permanently,
+        // but print nothing if this is to modify an existing record
+        if (!isModify) {
+            System.out.printf(
+                "Removed the song titled: %s%n"
+                    + "There are now %d songs stored in the search engine.%n",
+                existingSong.getTitle(), this.getSongCount());
         }
     }
 
@@ -103,7 +114,7 @@ public class SearchEngine {
         int nextId = 0;
         for (Song song : songs) {
             songsMap.add(song);
-            Scanner stringScanner = new Scanner(song.getLyrics());
+            Scanner stringScanner = new Scanner(song.getFilteredLyrics());
             while (stringScanner.hasNext()) {
                 String word = stringScanner.next();
                 if (!wordMap.contains(new WordID(word, 0))) {
@@ -117,11 +128,10 @@ public class SearchEngine {
             indexSong(song);
         }
     }
-
   
     private void indexSong(Song song) {
         ArrayList<String> words = new ArrayList<>();
-        Scanner stringScanner = new Scanner(song.getLyrics());
+        Scanner stringScanner = new Scanner(song.getFilteredLyrics());
         while (stringScanner.hasNext()) {
             String word = stringScanner.next();
             if (!words.contains(word)) {
@@ -139,8 +149,6 @@ public class SearchEngine {
             }
         }
     }
-    
-
     
     public Song getSong(String name) {
     	return songsMap.get(new Song(name, 0, null, null));
@@ -182,19 +190,18 @@ public class SearchEngine {
         Song song = new Song(key, 0, null, null);;
         Song useful = songsMap.get(song);
         if (useful == null) {
-            System.out.println("There are no songs with that exact name.");
+            System.out.println("There are no songs matching the primary key: " + key);
             return;
         }
         System.out.println(useful);
     }
 
-    public void searchByKeyword(String keyword) {
+    public BST<Song> searchByKeyword(String keyword) {
         WordID wordId = wordMap.get(new WordID(keyword, 0));
         if (wordId == null) {
-            System.out.println("No songs found with lyrics that contain the keyword \"" + keyword + "\".");
-            return;
+            return null;
         }
         BST<Song> resultTree = invertedIndex.get(wordId.getId());
-        System.out.println("Songs with lyrics that contain the keyword \"" + keyword + "\":\n" + resultTree.inOrderString());
+        return resultTree;
     }
 }

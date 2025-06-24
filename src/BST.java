@@ -413,8 +413,9 @@ public class BST<T> {
    public String inOrderString() {
 	   StringBuilder inOrder = new StringBuilder();
 	   inOrderString(root, inOrder);
-	   return inOrder.toString() + "\n";
+	   return inOrder.toString();
    }
+
    /**
     * helper method for inOrderString
     * @param node the current node to check
@@ -427,7 +428,7 @@ public class BST<T> {
 		   inOrderString(node.right, inOrder);
 	   }
    }
-   
+
    /**
     * returns a string of data in postOrder
     * @return a string of data in postOrder
@@ -440,7 +441,7 @@ public class BST<T> {
    /**
     * helper method for postOrderString
     * @param node the current node to check
-    * @param inOrder a stringbuilder to store data in
+    * @param postOrder a stringbuilder to store data in
     */
    private void postOrderString(Node node, StringBuilder postOrder) {
 	   if (node != null) {
