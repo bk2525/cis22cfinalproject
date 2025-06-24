@@ -133,7 +133,7 @@ public class SearchEngine {
                     wordId = new WordID(word, invertedIndex.size());
                     wordMap.add(wordId);
                     invertedIndex.add(new BST<>());
-                	System.out.println(invertedIndex.get(wordId.getId()).getSize());
+                	// System.out.println(invertedIndex.get(wordId.getId()).getSize());
                 }
                 invertedIndex.get(wordId.getId()).insert(song, new SongNameComparator());
             }
