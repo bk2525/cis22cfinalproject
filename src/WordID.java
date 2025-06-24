@@ -2,7 +2,8 @@ import java.util.Objects;
 
 /**
  * Purpose: a wordID class to hold the IDs of unique words for inverted indexing.
- * @author Naman Kumar & Jeses Louis
+ * @author Naman Kumar 
+ * @author Jeses Louis
  * CIS 22C, Final Project
  */
 
