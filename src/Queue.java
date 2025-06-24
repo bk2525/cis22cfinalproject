@@ -1,3 +1,4 @@
+
 /**
  * The Queue class definition
  * @author Stephen Lin
@@ -7,23 +8,22 @@
 
 import java.util.NoSuchElementException;
 
-
 public class Queue<T> implements Q<T> {
-	
-	private class Node{
+
+	private class Node {
 		private T data;
 		private Node next;
-		
+
 		public Node(T data) {
-			this.data= data;
+			this.data = data;
 			this.next = null;
 		}
 	}
-	
+
 	private int size;
 	private Node front;
 	private Node end;
-	
+
 	/**
 	 * default constructor: sets size to 0, and front and end to null
 	 */
@@ -31,9 +31,10 @@ public class Queue<T> implements Q<T> {
 		size = 0;
 		front = end = null;
 	}
-	
+
 	/**
 	 * turns a given array into a queue
+	 * 
 	 * @param data an array holding the data to be converted into a queue
 	 */
 	public Queue(T[] data) {
@@ -45,9 +46,10 @@ public class Queue<T> implements Q<T> {
 			enqueue(data[i]);
 		}
 	}
-	
+
 	/**
 	 * copy constructor: makes a deep copy of a given queue
+	 * 
 	 * @param data the queue to make a copy of
 	 */
 	public Queue(Queue<T> data) {
@@ -66,9 +68,10 @@ public class Queue<T> implements Q<T> {
 			temp.dequeue();
 		}
 	}
-	
+
 	/**
 	 * returns the value stored in the front node of the queue
+	 * 
 	 * @return the value at the front of the queue
 	 * @precondition the queue is not empty
 	 * @throws NoSuchElementException if queue is empty
@@ -83,6 +86,7 @@ public class Queue<T> implements Q<T> {
 
 	/**
 	 * returns size of queue
+	 * 
 	 * @return size of queue
 	 */
 	@Override
@@ -92,6 +96,7 @@ public class Queue<T> implements Q<T> {
 
 	/**
 	 * returns if the queue is empty
+	 * 
 	 * @return true if the queue is empty, false otherwise
 	 */
 	@Override
@@ -101,6 +106,7 @@ public class Queue<T> implements Q<T> {
 
 	/**
 	 * adds the given data into a new node at the end of the queue
+	 * 
 	 * @param data the data to be added to the queue
 	 */
 	@Override
@@ -108,7 +114,7 @@ public class Queue<T> implements Q<T> {
 		Node newBack = new Node(data);
 		if (size == 0) {
 			front = end = newBack;
-		}else{
+		} else {
 			end.next = newBack;
 			end = newBack;
 		}
@@ -117,6 +123,7 @@ public class Queue<T> implements Q<T> {
 
 	/**
 	 * removes the element at front of the queue
+	 * 
 	 * @precondition queue is not empty
 	 * @throws NoSuchElementException if queue is empty
 	 */
@@ -128,32 +135,34 @@ public class Queue<T> implements Q<T> {
 		front = front.next;
 		size--;
 	}
-	
+
 	/**
 	 * returns the string representation of the queue
+	 * 
 	 * @return the string representing the queue
 	 */
 	@Override
 	public String toString() {
 		Queue<T> temp = new Queue<T>();
 		String returnString = "";
-		
+
 		while (!isEmpty()) {
 			returnString += getFront().toString() + " ";
 			temp.enqueue(getFront());
 			dequeue();
 		}
-		
+
 		while (!temp.isEmpty()) {
 			enqueue(temp.getFront());
 			temp.dequeue();
 		}
-		
+
 		return returnString + "\n";
 	}
-	
+
 	/**
 	 * returns if two queues are equal
+	 * 
 	 * @param other the queue to be compared to
 	 * @return true if all elements of queue are equal, false otherwise
 	 */
@@ -162,7 +171,7 @@ public class Queue<T> implements Q<T> {
 		if (!(other instanceof Queue)) {
 			return false;
 		}
-		
+
 		Queue<T> oth = (Queue) other;
 		if (oth.size != size) {
 			return false;
@@ -170,12 +179,12 @@ public class Queue<T> implements Q<T> {
 		if (oth == this) {
 			return true;
 		}
-		
+
 		Queue<T> temp1 = new Queue<T>();
 		Queue<T> temp2 = new Queue<T>();
-		
+
 		boolean returnVal = true;
-		
+
 		while (!isEmpty()) {
 			if (!getFront().equals(oth.getFront())) {
 				returnVal = false;
@@ -185,20 +194,22 @@ public class Queue<T> implements Q<T> {
 			dequeue();
 			oth.dequeue();
 		}
-		
+
 		while (!temp1.isEmpty()) {
 			enqueue(temp1.getFront());
 			oth.enqueue(temp2.getFront());
 			temp1.dequeue();
 			temp2.dequeue();
 		}
-		
+
 		return returnVal;
-		
+
 	}
-	
+
 	/**
-	 * returns if a queue is sorted from small to large by calling the corresponding helper method
+	 * returns if a queue is sorted from small to large by calling the corresponding
+	 * helper method
+	 * 
 	 * @return if the queue is sorted from small to large
 	 */
 	public boolean isSorted() {
@@ -207,9 +218,10 @@ public class Queue<T> implements Q<T> {
 		}
 		return isSorted(front);
 	}
-	
+
 	/**
 	 * returns if an element is present in a queue by using linear search
+	 * 
 	 * @param element the element to search for
 	 * @return if the element is present
 	 */
@@ -219,9 +231,10 @@ public class Queue<T> implements Q<T> {
 		}
 		return linearSearch(front, element);
 	}
-	
+
 	/**
 	 * returns if an element is present in a queue by using binary search
+	 * 
 	 * @precondition queue is sorted in ascending order
 	 * @param element the element to search for
 	 * @return if the element is present
@@ -236,9 +249,10 @@ public class Queue<T> implements Q<T> {
 		}
 		return binarySearch(0, size - 1, value);
 	}
-	
+
 	/**
 	 * returns a string of the queue's elements in reverse order
+	 * 
 	 * @return a string of the queues elements in reverse order
 	 */
 	public String reverseQueue() {
@@ -247,11 +261,11 @@ public class Queue<T> implements Q<T> {
 		}
 		return reverseQueue(front) + " \n";
 	}
-	
-	
+
 	/** RECURSIVE HELPER METHODS */
 	/**
 	 * returns a string of the queue's elements in reverse order
+	 * 
 	 * @param node the current node being added to the string
 	 * @return a string of the queues elements in reverse order
 	 */
@@ -260,11 +274,12 @@ public class Queue<T> implements Q<T> {
 			return node.data + "";
 		}
 		return reverseQueue(node.next) + " " + node.data;
-		
+
 	}
-	
+
 	/**
 	 * checks if queue is sorted in ascending order
+	 * 
 	 * @param node currentNode being checked if in ascending order
 	 * @return if the queue is in ascending order
 	 */
@@ -272,17 +287,18 @@ public class Queue<T> implements Q<T> {
 		if (node.next == null) {
 			return true;
 		}
-	    Comparable<? super T> current = (Comparable<? super T>) node.data;
+		Comparable<? super T> current = (Comparable<? super T>) node.data;
 		if (current.compareTo(node.next.data) > 0) {
 			return false;
 		}
 		return isSorted(node.next);
 	}
-	
+
 	/**
 	 * checks if a value appears in queue using linear search
-	 * @param node current node being checked
-	 * @param value the value being checked for 
+	 * 
+	 * @param node  current node being checked
+	 * @param value the value being checked for
 	 * @return if the value appears in the queue
 	 */
 	private boolean linearSearch(Node node, T value) {
@@ -294,11 +310,12 @@ public class Queue<T> implements Q<T> {
 		}
 		return linearSearch(node.next, value);
 	}
-	
+
 	/**
 	 * returns the data in the middle of the queue
+	 * 
 	 * @param node current node being checked
-	 * @param mid the middle of the queue
+	 * @param mid  the middle of the queue
 	 * @return the data in middle of queue
 	 */
 	private T getMid(Node node, int mid) {
@@ -307,32 +324,30 @@ public class Queue<T> implements Q<T> {
 		}
 		return getMid(node.next, mid - 1);
 	}
-	
+
 	/**
 	 * returns if an element is in queue using binary search
-	 * @param low the lower bound to check
-	 * @param high the upper bound to check
+	 * 
+	 * @param low   the lower bound to check
+	 * @param high  the upper bound to check
 	 * @param value the value to check if present
 	 * @return if an element is present in queue
 	 */
-	private boolean binarySearch(int low, int high, T value){
+	private boolean binarySearch(int low, int high, T value) {
 		if (low > high) {
 			return false;
 		}
-		int mid = low + (high - low)/2;
+		int mid = low + (high - low) / 2;
 		T nodeData = getMid(front, mid);
 		if (nodeData.equals(value)) {
 			return true;
 		}
-	    Comparable<? super T> current = (Comparable<? super T>) nodeData;
+		Comparable<? super T> current = (Comparable<? super T>) nodeData;
 		if (current.compareTo(value) > 0) {
 			return binarySearch(low, mid - 1, value);
-		}else {
+		} else {
 			return binarySearch(mid + 1, high, value);
 		}
 	}
-	
-	
-	
 
 }
