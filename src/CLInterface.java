@@ -4,6 +4,9 @@
  * (suplemental authoring denoted in method javadoc comments)
  * CIS 22C, Group Project
  */
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Scanner;
 
 /**
@@ -102,7 +105,7 @@ public class CLInterface {
             "Search for a record",
             "Modify or update a record",
             "Statistics",
-            "Quit"
+            "Quit and print records to file"
         };
 
         // Launch the main menu loop and capture user input
@@ -118,9 +121,41 @@ public class CLInterface {
                 exit = true;
             }
         }
-
-        // TODO: Write all records to a file of user choice and exit
         return;
+    }
+
+    /**
+     * File print for a user session
+     * @throws Exception up the stack when a general exception is caught
+     */
+    private void printRecordsToFile() throws Exception {
+        String dirPath = "./exports/";
+        File dir = new File(dirPath);
+        if (!dir.exists() && !dir.mkdir()) {
+            throw new IOException("printRecordsToFile(): Failed to open export directory at '" + dirPath + "'");
+        }
+
+        System.out.print("Please enter a filename to export your search engine records to: ");
+        String fileName = keyboardInput.nextLine();
+        File file = new File(dirPath + fileName);
+
+        // Don't allow file overwrite to protect previous runs
+        while (file.exists()) {
+            System.out.printf(
+                "%nThe file '%s' already exists.%nPlease choose a unique file name: ",
+                fileName);
+            fileName = keyboardInput.nextLine();
+            file = new File(dirPath + fileName);
+        }
+
+        // Print records to file
+        try (PrintWriter pw = new PrintWriter(file)) {
+            pw.print(amse.toString());
+        } catch (Exception e) {
+            throw new Exception("printRecordsToFile(): An error occurred while writing to file.", e);
+        }
+
+        System.out.println("Records exported to '" + dirPath + fileName + "'.");
     }
 
     /**
@@ -128,9 +163,9 @@ public class CLInterface {
      * @param userSelection the menu selection made by the user
      * @param mainMenu the menu context
      * @return T if user would like to exit, F if not.
-     * @throws NullPointerException when this.amse == null
+     * @throws Exception up the stack when a general exception is caught
      */
-    private boolean actionHandler(int userSelection, Menu mainMenu) {
+    private boolean actionHandler(int userSelection, Menu mainMenu) throws Exception {
         if (userSelection != 3) { // Don't print if entering the search sub menu
             System.out.print("[" + mainMenu.getRows()[userSelection - 1] + "]\n");
         }
@@ -159,7 +194,9 @@ public class CLInterface {
                 break;
             case 6:
                 // System.out.println("actionHandler() Debug: 'Quit' was selected.");
-                System.out.println("\n[Exiting program...]\n");
+                this.printRecordsToFile();
+                System.out.print("\nPress \"Enter\" to Exit. ");
+                keyboardInput.nextLine();
                 return true;
             default:
                 // No-op; input validation ensures
@@ -168,7 +205,7 @@ public class CLInterface {
                 break;
         }
 
-        System.out.print("\nPress \"Enter\" to return to the main menu. ");
+        System.out.print("\nPress \"Enter\" to return to the Main Menu. ");
         keyboardInput.nextLine();
         this.clearConsole();
         return false;
@@ -245,7 +282,6 @@ public class CLInterface {
         }
         this.clearConsole();
     }
-
 
     /**
      * Displays the results menu from a keyword search
