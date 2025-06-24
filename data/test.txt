@@ -1,0 +1,4 @@
+test
+2025
+test
+test ensuring CLInterface.addRecord() and CLInterface.deleteRecord() methods function as expected. adele is the best!
