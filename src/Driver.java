@@ -23,7 +23,7 @@ public class Driver {
         } catch (NullPointerException
                  | NumberFormatException
                  | IllegalStateException e) {
-            System.err.println(e.getMessage());
+            System.err.println(e + "\nMessage:\n" +e.getMessage());
             System.exit(1);
         }
 

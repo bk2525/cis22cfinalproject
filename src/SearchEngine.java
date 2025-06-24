@@ -18,30 +18,47 @@ public class SearchEngine {
      * Constructs a SearchEngine with default capacity
      */
     public SearchEngine() {
-        this.wordMap = new HashTable<>(4096);
-        this.songsMap = new HashTable<>(4096);
+        this.wordMap = new HashTable<>(4096); // TODO sizing should be based on data size, not hardcoded
+        this.songsMap = new HashTable<>(4096); // TODO sizing should be based on data size, not hardcoded
         this.invertedIndex = new ArrayList<>();
     }
 
-    
-    public void addSong(String fileName) {
-        Song song = createSongFromFile(fileName);
+    // Imports a song from file (Javadoc needed)
+    public void importSong(String fileName) {
+        Song song;
+        try {
+            song = createSongFromFile(fileName);
+        } catch (Exception e) {
+            System.out.printf(
+                "The file '%s' could not be found or was locked for reading.%n", fileName);
+            return;
+        }
+
         songsMap.add(song);
         indexSong(song);
+        System.out.printf(
+            "Imported the song titled: %s%n"
+            + "There are now %d songs stored in the search engine.%n",
+            song.getTitle(), this.getSongCount());
     }
 
+    // Adds a song to the system (Javadoc needed)
     public void addSong(Song song) {
     	songsMap.add(song);
     	indexSong(song);
     }
-    public boolean deleteSong(String title) {
+
+    public void deleteSong(String title) {
+        // Find the song in the database
         Song songToDelete = new Song(title, 0, null, null);
         Song existingSong = songsMap.get(songToDelete);
         if (existingSong == null) {
-            return false;
+            System.out.printf(
+                "The song titled '%s' could not be found in the search engine.%n", title);
+            return;
         }
         
-        // Remove from primary storage
+        // Remove the song from primary storage
         songsMap.delete(existingSong);
         
         // Remove from all inverted index entries
@@ -55,25 +72,29 @@ public class SearchEngine {
                 if (wordId != null) {
                     BST<Song> songTree = invertedIndex.get(wordId.getId());
                     songTree.remove(existingSong, new SongNameComparator());
+
+                    // Remove words from wordMap that are unique to this song
+                    if (songTree.isEmpty()) {
+                        wordMap.delete(wordId);
+                        invertedIndex.set(wordId.getId(), null);
+                    }
                 }
             }
         }
-        return true;
     }
 
-    Song createSongFromFile(String fileName) {
-        try {
-            Scanner fileScanner = new Scanner(new File(fileName));
+    private Song createSongFromFile(String fileName) throws Exception {
+        try (Scanner fileScanner = new Scanner(new File(fileName))) {
             String title = fileScanner.nextLine();
-            String album = fileScanner.nextLine();
             int year = Integer.parseInt(fileScanner.nextLine());
+            String album = fileScanner.nextLine();
             StringBuilder lyrics = new StringBuilder();
             while (fileScanner.hasNextLine()) {
                 lyrics.append(fileScanner.nextLine()).append(" ");
             }
             return new Song(title, year, album, lyrics.toString().trim());
         } catch (Exception e) {
-            throw new RuntimeException("Error reading song file: " + fileName, e);
+            throw new Exception("createSongFromFile(): Error reading song file: " + fileName, e);
         }
     }
 
@@ -106,9 +127,14 @@ public class SearchEngine {
             if (!words.contains(word)) {
                 words.add(word);
                 WordID wordId = wordMap.get(new WordID(word, 0));
-                if (wordId != null) {
-                    invertedIndex.get(wordId.getId()).insert(song, new SongNameComparator());
+                if (wordId == null) {
+                    // New word detected, assign with new ID;
+                    // update wordMap and invertedIndex
+                    wordId = new WordID(word, wordMap.getNumElements());
+                    wordMap.add(wordId);
+                    invertedIndex.add(new BST<>());
                 }
+                invertedIndex.get(wordId.getId()).insert(song, new SongNameComparator());
             }
         }
     }
@@ -142,7 +168,6 @@ public class SearchEngine {
      * used for the statistic
      * @return a year
      */
-
      public int getAverageYear() {
         int sumYear = 0;
         ArrayList<Song> songs = songsMap.getAllElements();
@@ -151,26 +176,24 @@ public class SearchEngine {
         }
         return sumYear / songs.size();
      }
-    
-    public void keyWordSearch(String keyword) {
+
+    public void searchByKey(String key) {
+        Song song = new Song(key, 0, null, null);;
+        Song useful = songsMap.get(song);
+        if (useful == null) {
+            System.out.println("There are no songs with that exact name.");
+            return;
+        }
+        System.out.println(useful);
+    }
+
+    public void searchByKeyword(String keyword) {
         WordID wordId = wordMap.get(new WordID(keyword, 0));
         if (wordId == null) {
-            System.out.println("No songs found for: " + keyword);
+            System.out.println("No songs found with lyrics that contain the keyword \"" + keyword + "\".");
             return;
         }
         BST<Song> resultTree = invertedIndex.get(wordId.getId());
-        System.out.println("Songs containing \"" + keyword + "\":\n" + resultTree.inOrderString());
+        System.out.println("Songs with lyrics that contain the keyword \"" + keyword + "\":\n" + resultTree.inOrderString());
     }
-    
-    public void nameSearch(String name) {
-    	Song song = new Song(name, 0, null, null);;
-    	Song useful = songsMap.get(song);
-    	if (useful == null) {
-    		System.out.println("There are no songs with that exact name. ");
-    		return;
-    	}
-    	System.out.println(useful);
-    }
-
-    
 }

@@ -31,6 +31,6 @@ public class WordID {
 
     @Override
     public String toString() {
-        return word + "→" + id;
+        return word + "->" + id;
     }
 }

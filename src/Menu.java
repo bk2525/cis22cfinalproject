@@ -17,6 +17,7 @@ public class Menu {
     private static Scanner keyboardInput;
     private String appName;
     private String header;
+    private String borderPattern;
     private ArrayList<String> rows;
 
     /* [---CONSTRUCTORS---] */
@@ -25,7 +26,9 @@ public class Menu {
      * Defaults set:
      *   appName = "UNTITLED APP"
      *   header = "UNTITLED MENU"
+     *   borderPattern = ""
      *   rows = Empty ArrayList with a size of 1
+     *
      * @throws NullPointerException when keyboardInput has not been defined
      */
     public Menu() {
@@ -35,6 +38,7 @@ public class Menu {
 
         this.appName = "UNTITLED APP";
         this.header = "UNTITLED MENU";
+        this.borderPattern = "";
         this.rows = new ArrayList<String>(1);
     }
 
@@ -43,6 +47,7 @@ public class Menu {
      * Defaults set:
      *   appName = "UNTITLED APP"
      *   header = "UNTITLED MENU"
+     *   borderPattern = ""
      *   rows = Empty ArrayList with a size of 1
      * @param keyboardInput The Scanner to capture keyboard input
      * @throws IllegalArgumentException When keyboardInput == null
@@ -58,6 +63,7 @@ public class Menu {
 
         this.appName = "UNTITLED APP";
         this.header = "UNTITLED MENU";
+        this.borderPattern = "";
         this.rows = new ArrayList<String>(1);
     }
 
@@ -66,6 +72,7 @@ public class Menu {
      * Defaults set:
      *   appName = "UNTITLED APP"
      *   header = "UNTITLED MENU"
+     *   borderPattern = ""
      * @param keyboardInput The Scanner to capture keyboard input
      * @param rows A String array representing each row of the menu
      * @throws IllegalArgumentException When keyboardInput == null || rows == null
@@ -84,6 +91,7 @@ public class Menu {
     /**
      * Three-arg constructor - Sets keyboardInput, appName, header, and remaining member vars to default values.
      * Defaults set:
+     *   borderPattern = ""
      *   rows = Empty ArrayList with a size of 1
      * @param keyboardInput The Scanner to capture keyboard input
      * @param appName A String representing the app's name
@@ -100,6 +108,8 @@ public class Menu {
 
     /**
      * Four-arg constructor - Sets keyboardInput, appName, header, and rows
+     * Defaults set:
+     *   borderPattern = ""
      * @param keyboardInput The Scanner to capture keyboard input
      * @param appName A String representing the app's name
      * @param header A String representing the title of the menu
@@ -133,6 +143,14 @@ public class Menu {
     }
 
     /**
+     * Getter for the border pattern
+     * @return this.borderPattern as a String
+     */
+    public String getBorderPattern() {
+        return this.borderPattern;
+    }
+
+    /**
      * Getter for the rows
      * @return this.rows as a String[]
      */
@@ -163,6 +181,18 @@ public class Menu {
             throw new IllegalArgumentException("setHeader(): 'header' is null.");
         }
         this.header = header;
+    }
+
+    /**
+     * Setter for the border pattern
+     * @param borderPattern The menu's updated borderPattern.
+     * @throws IllegalArgumentException when borderPattern == null
+     */
+    public void setBorderPattern(String borderPattern) throws IllegalArgumentException {
+        if (borderPattern == null) {
+            throw new IllegalArgumentException("setBorderPattern(): 'borderPattern' is null.");
+        }
+        this.borderPattern = borderPattern;
     }
 
     /**
@@ -306,71 +336,79 @@ public class Menu {
     /* [---PRINTERS---] */
     /**
      * Prints the menu to System.out
-     * Note: attempts to format rows around a 72 char max,
-     * but does allow overflowing the max
+     * Note: attempts to format rows to a 72 char max,
+     * but does allow overflowing the max if appName
+     * or header exceed the limit
      */
     public void display() {
         // Assess the width of appName and header
-        // to calculate border padding; using 72 char
+        // to calculate padding; using 72 char
         // for the max width of a line as it's
         // a well known terminal standard.
         final int MAX_WIDTH = 72;
         final int LEFT_INDENT = 21;
-        final String STAR = "(*)";
-
         int appNameRowRemainder = MAX_WIDTH - this.appName.length();
         int headerRowRemainder = MAX_WIDTH - this.header.length();
 
-        // Will add +1 to right side during print if row remainder was odd
+        // Padding amount is the required width to either side of a variable
         int appNamePadding = (appNameRowRemainder / 2);
         int headerPadding = (headerRowRemainder / 2);
 
-        // Catch overflow case, but allow it and disable padding
-        // "2" to account for "| " or " |"
-        if (appNamePadding < 2) {
-            appNamePadding = 2;
+        // Catch overflow case, but allow it and disable padding;
+        if (appNamePadding < 0) {
+            appNamePadding = 0;
         }
-        if (headerPadding < 2) {
-            headerPadding = 2;
+        if (headerPadding < 0) {
+            headerPadding = 0;
         }
 
         // Concat the appName row
         String appNameRow = "";
-        appNameRow += STAR + "- ".repeat((appNamePadding - STAR.length()) / 2);
+        appNameRow += this.borderPattern + "- ".repeat((appNamePadding - this.borderPattern.length()) / 2);
         appNameRow += this.appName.toUpperCase();
-        appNameRow += " -".repeat((appNamePadding - STAR.length()) / 2);
+        appNameRow += " -".repeat((appNamePadding - this.borderPattern.length()) / 2);
         // Add a space to the right side's padding if the remainder was odd
         if (appNameRowRemainder % 2 != 0) {
             appNameRow += " ";
         }
-        appNameRow += STAR;
+        appNameRow += this.borderPattern;
 
         // Concat the header row
         String headerRow = "";
-        headerRow += STAR + " ".repeat(LEFT_INDENT - STAR.length());
+        headerRow += this.borderPattern + " ".repeat(LEFT_INDENT - this.borderPattern.length());
         headerRow += ("[ " + this.header.toUpperCase() + " ]");
 
         // Calculate end padding for header row
         int repeatCount = headerRowRemainder
             - LEFT_INDENT
             - ("[  ]".length())
-            - (STAR.length());
-        headerRow += " ".repeat(repeatCount) + STAR;
+            - (this.borderPattern.length());
+        headerRow += " ".repeat(repeatCount) + this.borderPattern;
 
-        // Print the appName and header rows
-        System.out.println(STAR.repeat(MAX_WIDTH / STAR.length()));
-        System.out.println(appNameRow);
-        System.out.println(STAR.repeat(MAX_WIDTH / STAR.length()));
-        System.out.println(headerRow);
+        // Print the appName and header rows with the border,
+        // if the border char count is < 1, skip the border
+        String borderRow = "";
+        if (this.borderPattern.length() > 0) {
+            borderRow += this.borderPattern.repeat(MAX_WIDTH / borderPattern.length()) + "\n";
+        }
+        System.out.println(borderRow + appNameRow);
+        System.out.println(borderRow + headerRow);
 
         // Print the menu options
         int index = 0;
         for (String row : rows) {
-            row = (STAR + " ".repeat(LEFT_INDENT - STAR.length()) + ++index + ". " + row);
-            repeatCount = MAX_WIDTH - row.length() - STAR.length();
-            System.out.println(row + " ".repeat(repeatCount) + STAR);
+            row = (this.borderPattern + " ".repeat(LEFT_INDENT - this.borderPattern.length()) + ++index + ". " + row);
+            repeatCount = MAX_WIDTH - row.length() - this.borderPattern.length();
+            System.out.println(row + " ".repeat(repeatCount) + this.borderPattern);
         }
-        System.out.println(STAR + "-".repeat(MAX_WIDTH - 6) + STAR);
+
+        // Print the bottom border
+        String bottomBorder =
+            this.borderPattern
+            + "-".repeat(MAX_WIDTH - (this.borderPattern.length() * 2))
+            + this.borderPattern;
+
+        System.out.println(bottomBorder);
     }
 
     /* [---INPUT HANDLER---] */
@@ -408,6 +446,7 @@ public class Menu {
                 System.out.println("Invalid input. Please try again.");
             }
         }
+        System.out.println(); // Line break
         return selection;
     }
 }

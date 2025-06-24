@@ -181,7 +181,7 @@ public class HashTable<T> {
      */
     public boolean delete(T element) throws NullPointerException {
     	if (element == null) {
-    		throw new NullPointerException("add: element is null!");	
+    		throw new NullPointerException("delete: element is null!");
     	}
     	int hash = hash(element);
     	LinkedList<T> list = table.get(hash);
@@ -189,6 +189,7 @@ public class HashTable<T> {
     	while (!list.offEnd()) {
     		if (list.getIterator().equals(element)) {
     			list.removeIterator();
+				numElements--;
     			return true;
     		}
     		list.advanceIterator();
