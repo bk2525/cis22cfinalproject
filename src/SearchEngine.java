@@ -130,9 +130,10 @@ public class SearchEngine {
                 if (wordId == null) {
                     // New word detected, assign with new ID;
                     // update wordMap and invertedIndex
-                    wordId = new WordID(word, wordMap.getNumElements());
+                    wordId = new WordID(word, invertedIndex.size());
                     wordMap.add(wordId);
                     invertedIndex.add(new BST<>());
+                	System.out.println(invertedIndex.get(wordId.getId()).getSize());
                 }
                 invertedIndex.get(wordId.getId()).insert(song, new SongNameComparator());
             }
