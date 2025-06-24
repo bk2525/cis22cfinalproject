@@ -280,8 +280,9 @@ public class CLInterface {
         }
         String resultsSummary = String.format(
             "   %d song%s found with lyrics containing the keyword '%s'.%n"
-            + "   See more information about %s result or return to the Search Menu.",
-            resultCount, plural, keyword, article);
+            + "   Enter %s number from the menu above to see more information about %s%n"
+            + "   result, or you can enter '%d' to return to the Search Menu.",
+            resultCount, plural, keyword, article, article, menuRows.length);
 
         // Pass null for the Scanner since its static and was set previously
         Menu searchResultsMenu = new Menu(null, appTitle, menuTitle, menuRows);
