@@ -5,8 +5,11 @@ import java.util.Comparator;
 /**
  * Represents a single Adele song, storing its title, album, year, and lyrics.
  * Implements Comparable based on the title (case-insensitive).
- * 
- * @author Kaylee Bui CIS 22C, Group Project
+
+ * @author Kaylee Bui
+ * @author Stephen Lin
+ * @author Stephen Kyker
+ * CIS 22C, Group Project
  */
 public class Song implements Comparable<Song> {
 	private String title; // Unique key
