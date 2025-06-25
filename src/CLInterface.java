@@ -173,7 +173,7 @@ public class CLInterface {
 		if (userSelection == 1) {
 			// System.out.println("actionHandler() Debug: 'Upload a new record' was
 			// selected.");
-			this.addRecord();
+			this.addRecord(mainMenu);
 		} else if (userSelection == 2) {
 			// System.out.println("actionHandler() Debug: 'Delete a record' was selected.");
 			this.deleteRecord();
@@ -213,12 +213,39 @@ public class CLInterface {
 	/**
 	 * adds a user-specified record to the search engine
 	 */
-	private void addRecord() {
-		boolean success = false;
-		do {
-			System.out.print("Enter the name of a file containing a song you would like to add: ");
-			success = amse.importSong("./data/" + keyboardInput.nextLine()); // Allow trailing white space
-		} while (!success);
+	private void addRecord(Menu menu) {
+		// Display modify menu
+		String appTitle = menu.getAppName();
+		String menuTitle = "ADD SONG MENU";
+		String[] menuRows = { "Enter a valid file name to add song", "Return to Main Menu" };
+
+		// Pass null for the Scanner since its static and was set previously
+		Menu modifyMenu = new Menu(null, appTitle, menuTitle, menuRows);
+		modifyMenu.setBorderPattern(menu.getBorderPattern());
+
+		boolean returnToParent = false;
+		while (!returnToParent) {
+			this.clearConsole();
+			modifyMenu.display();
+			int userSelection = Menu.getSelection(menuRows.length);
+
+			if (userSelection == 1) {
+				System.out.print("Enter a valid file name: ");
+				amse.importSong("./data/" + keyboardInput.nextLine()); // Allow trailing white space
+			} else if (userSelection == 2) {
+				returnToParent = true;
+			} else {
+				// No-op; input validation ensures
+				// this default is never used, but
+				// including for best practice
+			}
+
+			if (!returnToParent) {
+				System.out.print("\nPress \"Enter\" to return to the Modify Menu. ");
+				keyboardInput.nextLine();
+			}
+		}
+		this.clearConsole();
 	}
 
 	/**
