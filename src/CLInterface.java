@@ -214,8 +214,11 @@ public class CLInterface {
 	 * adds a user-specified record to the search engine
 	 */
 	private void addRecord() {
-		System.out.print("Enter the name of a file containing a song you would like to add: ");
-		amse.importSong("./data/" + keyboardInput.nextLine()); // Allow trailing white space
+		boolean success = false;
+		do {
+			System.out.print("Enter the name of a file containing a song you would like to add: ");
+			success = amse.importSong("./data/" + keyboardInput.nextLine()); // Allow trailing white space
+		} while (!success);
 	}
 
 	/**

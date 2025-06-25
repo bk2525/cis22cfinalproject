@@ -32,22 +32,28 @@ public class SearchEngine {
 
 	/**
 	 * creates a new Song object from information from the given file. If the file
-	 * does not exist, it prints an error message and does nothing.
+	 * does not exist, it prints an error message and does nothing. returns true if the operation was successful
 	 * 
 	 * @param fileName the file containing song-information
+	 * @return true if operation was successful, false if not
 	 */
-	public void importSong(String fileName) {
+	public boolean importSong(String fileName) {
 		Song song;
 		try {
 			song = createSongFromFile(fileName);
 		} catch (Exception e) {
 			System.out.printf("The file '%s' could not be found or was locked for reading.%n", fileName);
-			return;
+			return false;
 		}
-
+		if (songsMap.contains(song)) {
+			System.out.println("There already exists a song in the engine with the title " + song.getTitle()
+					+ ". Please choose another file. ");
+			return false;
+		}
 		indexSong(song);
 		System.out.printf("Imported the song titled: %s%n" + "There are now %d songs stored in the search engine.%n",
 				song.getTitle(), this.getSongCount());
+		return true;
 	}
 
 	/**
