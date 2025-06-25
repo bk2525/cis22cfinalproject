@@ -359,40 +359,7 @@ public class BST<T> {
 
 	/*** ADDITONAL OPERATIONS ***/
 
-	/**
-	 * Creates a String that is a height order traversal of the data in the tree
-	 * starting at the Node with the largest height (the root) down to Nodes of
-	 * smallest height - with Nodes of equal height added from left to right.
-	 * 
-	 * @return the level order traversal as a String
-	 */
-	public String levelOrderString() {
-		Queue<Node> que = new Queue<>();
-		StringBuilder sb = new StringBuilder();
-		que.enqueue(root);
-		levelOrderString(que, sb);
-		return sb.toString() + "\n";
-	}
-
-	/**
-	 * Helper method to levelOrderString. Inserts the data in level order into a
-	 * String.
-	 * 
-	 * @param que            the Queue in which to store the data.
-	 * @param heightTraverse a StringBuilder containing the data.
-	 */
-	private void levelOrderString(Queue<Node> que, StringBuilder heightTraverse) {
-		if (!que.isEmpty()) {
-			Node nd = que.getFront();
-			que.dequeue();
-			if (nd != null) {
-				que.enqueue(nd.left);
-				que.enqueue(nd.right);
-				heightTraverse.append(nd.data + " ");
-			}
-			levelOrderString(que, heightTraverse);
-		}
-	}
+	
 
 	/**
 	 * returns a string of data in preOrder
