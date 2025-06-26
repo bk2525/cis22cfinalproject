@@ -1,12 +1,12 @@
-import java.util.*;
-import java.io.File;
-
 /**
- * Purpose: create a search engine to perform operations like adding, deleting, modifying, and looking up songs.
- * @author Naman Kumar 
+ * SearchEngine.java
+ * @author Naman Kumar
  * @author Jeses Louis
+ * @author Maryan Le
  * CIS 22C, Final Project
  */
+import java.util.*;
+import java.io.File;
 
 /**
  * SearchEngine builds an inverted index using BSTs and allows keyword searches
@@ -15,11 +15,17 @@ import java.io.File;
  * 
  */
 public class SearchEngine {
-	// maps each unique word to its WordID (word + assigned ID)
+	/**
+	 * Maps each unique word to its WordID (word + assigned ID)
+ 	 */
 	private final HashTable<WordID> wordMap;
-	// stores all songs by title for direct O(1) access
+	/**
+	 * Stores all songs by title for direct O(1) access
+	 */
 	private final HashTable<Song> songsMap;
-	// for each word ID, a BST of Songs containing that word (inverted index)
+	/**
+	 * For each word ID, a BST of Songs containing that word (inverted index)
+	 */
 	private final ArrayList<BST<Song>> invertedIndex;
 
 	/**
@@ -32,7 +38,7 @@ public class SearchEngine {
 	}
 
 	/**
-	 * creates a new Song object from information from the given file. If the file
+	 * Creates a new Song object from information from the given file. If the file
 	 * does not exist, it prints an error message and does nothing. returns true if the operation was successful
 	 * 
 	 * @param fileName the file containing song-information
@@ -58,7 +64,7 @@ public class SearchEngine {
 	}
 
 	/**
-	 * adds a song to the engine from a passed in Song object
+	 * Adds a song to the engine from a passed in Song object
 	 * 
 	 * @param song the song object to add
 	 */
@@ -143,8 +149,7 @@ public class SearchEngine {
 	/**
 	 * Populates the data structures with the given song
 	 * 
-	 * @param songs the songs whose information will be used to populate the data
-	 *              structure
+	 * @param song the song to index
 	 */
 	public void indexSong(Song song) {
 		songsMap.add(song);

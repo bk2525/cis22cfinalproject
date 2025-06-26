@@ -1,4 +1,3 @@
-
 /**
  * Menu.java
  * @author Stephen Kyker
@@ -8,17 +7,28 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
- * Menu Class Handles the menu and UI systems' logic; Instantiation via the
- * zero-argument constructor is explicitly disabled, as a Menu should not be
- * empty; use designated constructors instead.
- *
- * @author Stephen Kyker
+ * Menu Class Handles the menu and UI systems structure
  */
 public class Menu {
+	/**
+	 * The Scanner to capture user input
+	 */
 	private static Scanner keyboardInput;
+	/**
+	 * The name of the program
+	 */
 	private String appName;
+	/**
+	 * The name of this menu
+	 */
 	private String header;
+	/**
+	 * The pattern to use as a border
+	 */
 	private String borderPattern;
+	/**
+	 * The menu rows
+	 */
 	private ArrayList<String> rows;
 
 	/* [---CONSTRUCTORS---] */
@@ -94,7 +104,8 @@ public class Menu {
 	 * @throws IllegalArgumentException When keyboardInput == null || appName ==
 	 *                                  null || header == null
 	 */
-	public Menu(Scanner keyboardInput, String appName, String header) throws IllegalArgumentException {
+	public Menu(Scanner keyboardInput, String appName, String header)
+		throws IllegalArgumentException {
 		this(keyboardInput);
 		if (appName == null)
 			throw new IllegalArgumentException("Menu(): 'appName' is null.");
@@ -115,7 +126,8 @@ public class Menu {
 	 * @throws IllegalArgumentException When keyboardInput == null || appName ==
 	 *                                  null || header == null || rows == null
 	 */
-	public Menu(Scanner keyboardInput, String appName, String header, String[] rows) throws IllegalArgumentException {
+	public Menu(Scanner keyboardInput, String appName, String header, String[] rows)
+		throws IllegalArgumentException {
 		this(keyboardInput, appName, header);
 		if (rows == null)
 			throw new IllegalArgumentException("Menu(): 'rows' is null.");
@@ -224,7 +236,7 @@ public class Menu {
 	 * @param index The index of the row to modify.
 	 * @param row   The updated row String.
 	 * @return The old row as a String.
-	 * @throws IllegalArgumentException when index < 0 || index >= this.rows.size()
+	 * @throws IllegalArgumentException when index &lt; 0 || index &gt;= this.rows.size()
 	 *                                  || row == null
 	 */
 	public String setRow(int index, String row) throws IllegalArgumentException {
@@ -254,7 +266,8 @@ public class Menu {
 			throw new IllegalArgumentException("setRow(): 'row' is null.");
 		}
 		if (!this.rows.contains(rowQuery)) {
-			throw new IllegalArgumentException("setRow(): 'rowQuery' could not be found in 'rows'.");
+			throw new IllegalArgumentException(
+				"setRow(): 'rowQuery' could not be found in 'rows'.");
 		}
 		int index = this.rows.indexOf(rowQuery);
 		return this.rows.set(index, row);
@@ -279,7 +292,7 @@ public class Menu {
 	 * 
 	 * @param index The index at which to insert the new row.
 	 * @param row   The row to add.
-	 * @throws IllegalArgumentException when index < 0 || index > this.rows.size()
+	 * @throws IllegalArgumentException when index &lt; 0 || index &gt; this.rows.size()
 	 *                                  || row == null
 	 */
 	public void addRow(int index, String row) throws IllegalArgumentException {
@@ -302,7 +315,8 @@ public class Menu {
 	 * @throws IllegalArgumentException when rowQuery == null || row == null ||
 	 *                                  !this.rows.contains(row)
 	 */
-	public void addRow(String rowQuery, String row, boolean isBefore) throws IllegalArgumentException {
+	public void addRow(String rowQuery, String row, boolean isBefore)
+		throws IllegalArgumentException {
 		if (rowQuery == null) {
 			throw new IllegalArgumentException("addRow(): 'rowQuery' is null.");
 		}
@@ -310,7 +324,8 @@ public class Menu {
 			throw new IllegalArgumentException("addRow(): 'row' is null.");
 		}
 		if (!this.rows.contains(rowQuery)) {
-			throw new IllegalArgumentException("addRow(): 'rowQuery' could not be found in 'rows'.");
+			throw new IllegalArgumentException(
+				"addRow(): 'rowQuery' could not be found in 'rows'.");
 		}
 
 		int index = this.rows.indexOf(rowQuery);
@@ -327,7 +342,7 @@ public class Menu {
 	 * 
 	 * @param index The index at which to remove a row.
 	 * @return The removed row as a String
-	 * @throws IllegalArgumentException when index < 0 || index >= this.rows.size()
+	 * @throws IllegalArgumentException when index &lt; 0 || index &gt;= this.rows.size()
 	 */
 	public String removeRow(int index) throws IllegalArgumentException {
 		if (index < 0 || index >= this.rows.size()) {
@@ -383,7 +398,8 @@ public class Menu {
 
 		// Concat the appName row
 		String appNameRow = "";
-		appNameRow += this.borderPattern + "- ".repeat((appNamePadding - this.borderPattern.length()) / 2);
+		appNameRow += this.borderPattern
+			+ "- ".repeat((appNamePadding - this.borderPattern.length()) / 2);
 		appNameRow += this.appName.toUpperCase();
 		appNameRow += " -".repeat((appNamePadding - this.borderPattern.length()) / 2);
 		// Add a space to the right side's padding if the remainder was odd
@@ -398,7 +414,8 @@ public class Menu {
 		headerRow += ("[ " + this.header.toUpperCase() + " ]");
 
 		// Calculate end padding for header row
-		int repeatCount = headerRowRemainder - LEFT_INDENT - ("[  ]".length()) - (this.borderPattern.length());
+		int repeatCount = headerRowRemainder
+			- LEFT_INDENT - ("[  ]".length()) - (this.borderPattern.length());
 		headerRow += " ".repeat(repeatCount) + this.borderPattern;
 
 		// Print the appName and header rows with the border,
@@ -413,7 +430,8 @@ public class Menu {
 		// Print the menu options
 		int index = 0;
 		for (String row : rows) {
-			row = (this.borderPattern + " ".repeat(LEFT_INDENT - this.borderPattern.length()) + ++index + ". " + row);
+			row = (this.borderPattern
+				+ " ".repeat(LEFT_INDENT - this.borderPattern.length()) + ++index + ". " + row);
 			repeatCount = MAX_WIDTH - row.length() - this.borderPattern.length();
 			if (repeatCount < 0) {
 				repeatCount = 0;
@@ -422,9 +440,8 @@ public class Menu {
 		}
 
 		// Print the bottom border
-		String bottomBorder = this.borderPattern + "-".repeat(MAX_WIDTH - (this.borderPattern.length() * 2))
-				+ this.borderPattern;
-
+		String bottomBorder = this.borderPattern
+			+ "-".repeat(MAX_WIDTH - (this.borderPattern.length() * 2)) + this.borderPattern;
 		System.out.println(bottomBorder);
 	}
 
@@ -436,15 +453,17 @@ public class Menu {
 	 * variable.
 	 * 
 	 * @param optionCount the number of options a user can choose from
+	 * @return the user's selection
 	 * @throws NullPointerException     when Menu.keyboardInput == null
-	 * @throws IllegalArgumentException when optionCount < 1
+	 * @throws IllegalArgumentException when optionCount &lt; 1
 	 */
 	public static int getSelection(int optionCount) throws NullPointerException {
 		if (Menu.keyboardInput == null) {
 			throw new NullPointerException("getSelection(): Scanner 'Menu.keyboardInput' is null.");
 		}
 		if (optionCount < 1) {
-			throw new IllegalArgumentException("getSelection(): 'optionCount' must be greater than 0.");
+			throw new IllegalArgumentException(
+				"getSelection(): 'optionCount' must be greater than 0.");
 		}
 
 		// Get user's menu selection
@@ -457,7 +476,8 @@ public class Menu {
 				keyboardInput.nextLine();
 				isValidSelection = (selection > 0 && selection <= optionCount);
 				if (!isValidSelection) {
-					throw new IndexOutOfBoundsException("getSelection(): user selection out of bounds.");
+					throw new IndexOutOfBoundsException(
+						"getSelection(): user selection out of bounds.");
 				}
 			} catch (Exception e) {
 				keyboardInput.nextLine(); // Clear the input

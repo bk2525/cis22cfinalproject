@@ -1,18 +1,37 @@
-
 /**
  * BST.java
  * @author Stephen Lin
- * CIS 22C Lab 9
+ * CIS 22C, Final Project
  */
 import java.util.Comparator;
 import java.util.NoSuchElementException;
 
+/**
+ * Generic BST class implementation
+ * @param <T> the type of elements stored in the BST
+ */
 public class BST<T> {
+	/**
+	 * Node class implementation
+	 */
 	private class Node {
+		/**
+		 * The node's data
+		 */
 		private T data;
+		/**
+		 * The left connecting node
+		 */
 		private Node left;
+		/**
+		 * The right connecting node
+		 */
 		private Node right;
 
+		/**
+		 * Constructs a new node
+		 * @param data the generic data to place in the node
+		 */
 		public Node(T data) {
 			this.data = data;
 			left = null;
@@ -20,24 +39,25 @@ public class BST<T> {
 		}
 	}
 
+	/**
+	 * The root node of the BST
+	 */
 	private Node root;
 
-	/*** CONSTRUCTORS ***/
+	/* CONSTRUCTORS */
 	/**
-	 * default constructor. sets root to null
+	 * Default constructor. sets root to null
 	 */
-
 	public BST() {
 		root = null;
 	}
 
 	/**
-	 * creates a bst of minimal height from the given array
+	 * Creates a BST of minimal height from the given array
 	 * 
 	 * @param array the array to use
 	 * @param cmp   the way the tree is organized
-	 * @precondition array sorted in ascending order
-	 * @throws IllegalArgumentException if not sorted
+	 * @throws IllegalArgumentException if not sorted (precondition)
 	 */
 	public BST(T[] array, Comparator<T> cmp) throws IllegalArgumentException {
 		if (array == null) {
@@ -50,7 +70,7 @@ public class BST<T> {
 	}
 
 	/**
-	 * checks if an array is sorted
+	 * Checks if an array is sorted
 	 * 
 	 * @param array the array to check
 	 * @param cmp   the way the array is ordered
@@ -66,7 +86,7 @@ public class BST<T> {
 	}
 
 	/**
-	 * recursive helper for constructor
+	 * Recursive helper for constructor
 	 * 
 	 * @param begin where to start
 	 * @param end   where to end
@@ -87,7 +107,7 @@ public class BST<T> {
 	}
 
 	/**
-	 * copy constructor for BST
+	 * Copy constructor
 	 * 
 	 * @param bst the BST to copy
 	 * @param cmp the comparator indicating how to sort data
@@ -100,7 +120,7 @@ public class BST<T> {
 	}
 
 	/**
-	 * helper method for copy constructor
+	 * Helper method for copy constructor
 	 * 
 	 * @param node the current node to copy
 	 * @param cmp  comparator indicating how to sort data
@@ -114,13 +134,11 @@ public class BST<T> {
 
 	}
 
-	/*** ACCESSORS ***/
-
+	/* ACCESSORS */
 	/**
-	 * finds the maximum of the BST
-	 * 
-	 * @precondition !isEmpty
-	 * @throws NoSuchElementException if the tree is empty
+	 * Finds the maximum of the BST
+	 *
+	 * @throws NoSuchElementException if the tree is empty (precondition)
 	 * @return the maximum element of the BST
 	 */
 	public T findMax() throws NoSuchElementException {
@@ -131,12 +149,12 @@ public class BST<T> {
 	}
 
 	/**
-	 * helper method for findMaximum; finds the maximum of the BST
+	 * Helper method for findMaximum; finds the maximum of the BST
 	 * 
 	 * @param node the current node to check
 	 * @return the maximum of the BST
 	 */
-	public T findMax(Node node) {
+	private T findMax(Node node) {
 		if (node.right == null) {
 			return node.data;
 		}
@@ -144,10 +162,9 @@ public class BST<T> {
 	}
 
 	/**
-	 * finds the min of the BST
-	 * 
-	 * @precondition !isEmpty
-	 * @throws NoSuchElementException if the tree is empty
+	 * Finds the min of the BST
+	 *
+	 * @throws NoSuchElementException if the tree is empty (precondition)
 	 * @return the min element of the BST
 	 */
 	public T findMin() {
@@ -158,12 +175,12 @@ public class BST<T> {
 	}
 
 	/**
-	 * helper method for findMinimum; finds the min of the BST
+	 * Helper method for findMinimum; finds the min of the BST
 	 * 
 	 * @param node the current node to check
 	 * @return the min of the BST
 	 */
-	public T findMin(Node node) {
+	private T findMin(Node node) {
 		if (node.left == null) {
 			return node.data;
 		}
@@ -171,11 +188,10 @@ public class BST<T> {
 	}
 
 	/**
-	 * returns data stored in root
-	 * 
-	 * @precondition !isEmpty()
+	 * Returns data stored in root
+	 *
 	 * @return data stored in root
-	 * @throws NoSuchElementException if precondition is violated
+	 * @throws NoSuchElementException if the root is null (precondition)
 	 */
 	public T getRoot() {
 		if (isEmpty()) {
@@ -185,16 +201,16 @@ public class BST<T> {
 	}
 
 	/**
-	 * returns if the BST is empty
+	 * Returns if the BST is empty
 	 * 
-	 * @returns if the BST is empty
+	 * @return if the BST is empty
 	 */
 	public boolean isEmpty() {
 		return root == null;
 	}
 
 	/**
-	 * returns height of BST
+	 * Returns height of BST
 	 * 
 	 * @return the height
 	 */
@@ -203,7 +219,7 @@ public class BST<T> {
 	}
 
 	/**
-	 * returns height of the bst
+	 * Returns height of the bst
 	 * 
 	 * @param node the current node whose height to count
 	 * @return height of tree
@@ -219,7 +235,7 @@ public class BST<T> {
 	}
 
 	/**
-	 * searches if a data exists in the tree
+	 * Searches if a data exists in the tree
 	 * 
 	 * @param data the data to search for
 	 * @param cmp  ordering if the tree
@@ -230,7 +246,7 @@ public class BST<T> {
 	}
 
 	/**
-	 * searches if a data exists in the tree
+	 * Searches if a data exists in the tree
 	 * 
 	 * @param data the data to search for
 	 * @param node the current node to check
@@ -251,7 +267,7 @@ public class BST<T> {
 	}
 
 	/**
-	 * returns size of tree (number of nodes)
+	 * Returns size of tree (number of nodes)
 	 * 
 	 * @return size of tree
 	 */
@@ -260,7 +276,7 @@ public class BST<T> {
 	}
 
 	/**
-	 * returns size of tree (number of nodes)
+	 * Returns size of tree (number of nodes)
 	 * 
 	 * @param node the current node
 	 * @return size of tree
@@ -274,12 +290,10 @@ public class BST<T> {
 		return 1 + leftSize + rightSize;
 	}
 
-	/*** MUTATORS ***/
-
+	/* MUTATORS */
 	/**
-	 * removes data from the BST
-	 * 
-	 * @precondition !isEmpty
+	 * Removes data from the BST
+	 *
 	 * @param data the data to remove
 	 * @param cmp  comparator indicating how to sort data
 	 */
@@ -288,14 +302,14 @@ public class BST<T> {
 	}
 
 	/**
-	 * helper method for remove
+	 * Helper method for remove
 	 * 
 	 * @param data the data to remove
 	 * @param node the current node to check
 	 * @param cmp  comparator indicating how to sort data
 	 * @return the node
 	 */
-	public Node remove(T data, Node node, Comparator<T> cmp) {
+	private Node remove(T data, Node node, Comparator<T> cmp) {
 		if (node == null) {
 			return null;
 		} else if (cmp.compare(data, node.data) > 0) {
@@ -318,7 +332,7 @@ public class BST<T> {
 	}
 
 	/**
-	 * adds data into the binary search tree
+	 * Adds data into the binary search tree
 	 * 
 	 * @param data the data to add
 	 * @param cmp  comparator indicating how to sort data
@@ -332,7 +346,7 @@ public class BST<T> {
 	}
 
 	/**
-	 * adds data into the binary search tree
+	 * Adds data into the binary search tree
 	 * 
 	 * @param data the data to add
 	 * @param node the current node
@@ -357,12 +371,9 @@ public class BST<T> {
 		}
 	}
 
-	/*** ADDITONAL OPERATIONS ***/
-
-	
-
+	/* ADDITIONAL OPERATIONS */
 	/**
-	 * returns a string of data in preOrder
+	 * Returns a string of data in preOrder
 	 * 
 	 * @return a string of data in preOrder
 	 */
@@ -373,10 +384,10 @@ public class BST<T> {
 	}
 
 	/**
-	 * helper method for preorderstring
+	 * Helper method for preOrderString
 	 * 
 	 * @param node     the current node to check
-	 * @param preOrder a stringbuilder to store data in
+	 * @param preOrder a StringBuilder to store data in
 	 */
 	private void preOrderString(Node node, StringBuilder preOrder) {
 		if (node != null) {
@@ -387,7 +398,7 @@ public class BST<T> {
 	}
 
 	/**
-	 * returns a string of data in inOrder
+	 * Returns a string of data in inOrder
 	 * 
 	 * @return a string of data in inOrder
 	 */
@@ -398,10 +409,10 @@ public class BST<T> {
 	}
 
 	/**
-	 * helper method for inOrderString
+	 * Helper method for inOrderString
 	 * 
 	 * @param node    the current node to check
-	 * @param inOrder a stringbuilder to store data in
+	 * @param inOrder a StringBuilder to store data in
 	 */
 	private void inOrderString(Node node, StringBuilder inOrder) {
 		if (node != null) {
@@ -412,7 +423,7 @@ public class BST<T> {
 	}
 
 	/**
-	 * returns a string of data in postOrder
+	 * Returns a string of data in postOrder
 	 * 
 	 * @return a string of data in postOrder
 	 */
@@ -423,28 +434,27 @@ public class BST<T> {
 	}
 
 	/**
-	 * helper method for postOrderString
+	 * Helper method for postOrderString
 	 * 
 	 * @param node      the current node to check
-	 * @param postOrder a stringbuilder to store data in
+	 * @param postOrder a StringBuilder to store data in
 	 */
 	private void postOrderString(Node node, StringBuilder postOrder) {
 		if (node != null) {
 			postOrderString(node.left, postOrder);
 			postOrderString(node.right, postOrder);
-			postOrder.append(node.data + " ");
+			postOrder.append(node.data).append(" ");
 		}
 	}
 
-	/*** CHALLENGE METHODS ***/
 	/**
-	 * returns the shared precursor of the nodes containing the two data points
-	 * 
-	 * @precondition data1 and data2 exist
+	 * Returns the shared precursor of the nodes containing the two data points
+	 *
 	 * @param data1 the first data
 	 * @param data2 the second data
 	 * @param cmp   the comparator indicating how to sort data
 	 * @return the shared precursor
+	 * @throws IllegalArgumentException when data1 or data2 cannot be found (precondition)
 	 */
 	public T sharedPrecursor(T data1, T data2, Comparator<T> cmp) throws IllegalArgumentException {
 		if (search(data1, cmp) == null || search(data2, cmp) == null) {
@@ -454,13 +464,13 @@ public class BST<T> {
 	}
 
 	/**
-	 * returns the shared precursor of the nodes containing the two data points
+	 * Returns the shared precursor of the nodes containing the two data points
 	 * 
 	 * @param data1 the first data
 	 * @param data2 the second data
 	 * @param node  the node to check
 	 * @param cmp   the comparator indicating how to sort data
-	 * @return the eshared precursor
+	 * @return the shared precursor
 	 */
 	private T sharedPrecursor(T data1, T data2, Node node, Comparator<T> cmp) {
 		if (cmp.compare(data1, node.data) > 0 && cmp.compare(data2, node.data) > 0) {
@@ -471,5 +481,4 @@ public class BST<T> {
 			return node.data;
 		}
 	}
-
 }

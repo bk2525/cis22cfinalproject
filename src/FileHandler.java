@@ -1,26 +1,21 @@
-
 /**
  * FileHandler.java
  * @author Stephen Kyker
- * CIS 22C, Group Project
+ * CIS 22C, Final Project
  */
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 /**
- * Handles logic related to file management and file I/O operations. Implements
+ * Handles logic related to file input operations. Implements
  * AutoCloseable to support use within try-with-resources.
  */
 public class FileHandler implements AutoCloseable {
 	/**
 	 * Default Constructor
-	 * 
-	 * @throws Exception if a general exception occurs
 	 */
-	public FileHandler() throws Exception {
-	}
+	public FileHandler() {}
 
 	/**
 	 * Loads all matching data files into memory from a directory; files are matched
@@ -32,8 +27,10 @@ public class FileHandler implements AutoCloseable {
 	 * @param filePrefix the prefix of the file name, e.g., "song"
 	 * @param fileSuffix the suffix of the file name, e.g., ".txt"
 	 * @throws FileNotFoundException if a file cannot be accessed
+	 * @return a string of the file contents held in the directory
 	 */
-	public String readDir(String dirPath, String filePrefix, String fileSuffix) throws FileNotFoundException {
+	public String readDir(String dirPath, String filePrefix, String fileSuffix)
+		throws FileNotFoundException {
 
 		File dir = new File(dirPath);
 		if (!dir.exists()) {
@@ -45,11 +42,10 @@ public class FileHandler implements AutoCloseable {
 
 		// Null or empty check
 		if (files == null || files.length == 0) {
-			throw new FileNotFoundException(
-					String.format(
-							"loadData(): No files found in " + dirPath + " or "
-									+ "the files are inaccessible for reading." + "  Failed Pattern Match: %s*%s%n",
-							filePrefix, fileSuffix));
+			throw new FileNotFoundException(String.format(
+				"loadData(): No files found in %s or the files are inaccessible for reading.%n"
+				+ "  Failed Pattern Match: %s*%s%n",
+				dirPath, filePrefix, fileSuffix));
 		}
 
 		// Sort the files by name, and if applicable,
@@ -89,8 +85,9 @@ public class FileHandler implements AutoCloseable {
 				rawData.append(fileScan.nextLine()).append("\n");
 			}
 		} catch (FileNotFoundException fnfe) {
-			throw new FileNotFoundException(String.format("readFile(): " + file + " cannot be found or is "
-					+ "inaccessible for reading.%n" + "  Exception: %s%n", fnfe.getMessage()));
+			throw new FileNotFoundException(String.format(
+				"readFile(): %s cannot be found or is inaccessible for reading.%n"
+				+ "  Exception: %s%n", file, fnfe.getMessage()));
 		}
 
 		return rawData.toString();
@@ -100,6 +97,7 @@ public class FileHandler implements AutoCloseable {
 	 * Insertion sorts a list of files by name; Sorts in natural ascending order by
 	 * file name
 	 *
+	 * @param files the files to sort
 	 * @throws NullPointerException if file list is null or empty
 	 */
 	public void sortFilesByName(File[] files) throws NullPointerException {
@@ -133,7 +131,7 @@ public class FileHandler implements AutoCloseable {
 	 *
 	 * @param file1 the first file to compare
 	 * @param file2 the second file to compare
-	 * @return 0 if equal, 1 if file1 > file2, and -1 if file1 < file2
+	 * @return 0 if equal, 1 if file1 &gt; file2, and -1 if file1 &lt; file2
 	 */
 	public int compareByName(File file1, File file2) {
 		// Null check
@@ -165,12 +163,9 @@ public class FileHandler implements AutoCloseable {
 
 	/**
 	 * AutoCloseable implement for try-with-resources
-	 *
-	 * @throws Exception if any exception occurs during clean up
 	 */
 	@Override
-	public void close() throws Exception {
-		// May eventually add class level streams
-		// that will need to be cleaned up here
+	public void close() {
+		// No cleanup required
 	}
 }

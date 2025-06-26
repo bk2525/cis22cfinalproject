@@ -1,3 +1,9 @@
+/**
+ * Song.java
+ * @author Kaylee Bui
+ * @author Stephen Lin
+ * CIS 22C, Final Project
+ */
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -5,21 +11,30 @@ import java.util.Comparator;
 /**
  * Represents a single Adele song, storing its title, album, year, and lyrics.
  * Implements Comparable based on the title (case-insensitive).
-
- * @author Kaylee Bui
- * @author Stephen Lin
- * @author Stephen Kyker
- * CIS 22C, Group Project
  */
 public class Song implements Comparable<Song> {
+	/**
+	 * The title of this Song
+	 */
 	private String title; // Unique key
+	/**
+	 * The year this Song was released
+	 */
 	private int year;
+	/**
+	 * The name of this Song's album
+	 */
 	private String album;
+	/**
+	 * This Song's unfiltered lyrics
+	 */
 	private String unfilteredLyrics;
+	/**
+	 * This Song's filtered lyrics (invalid keywords removed)
+	 */
 	private String filteredLyrics;
 
-	/** CONSTRUCTORS **/
-
+	/* CONSTRUCTORS */
 	/**
 	 * Constructs a new Song object for search purposes; songCount and songNumber do
 	 * not get updated as this creates a dummy object only.
@@ -52,8 +67,7 @@ public class Song implements Comparable<Song> {
 		this.filteredLyrics = removeWords(lyrics);
 	}
 
-	/** ACCESSORS **/
-
+	/* ACCESSORS */
 	/**
 	 * Returns the title of the song.
 	 * 
@@ -99,8 +113,7 @@ public class Song implements Comparable<Song> {
 		return filteredLyrics;
 	}
 
-	/** MUTATORS **/
-
+	/* MUTATORS */
 	/**
 	 * Sets a new title for the song.
 	 * 
@@ -139,8 +152,7 @@ public class Song implements Comparable<Song> {
 		this.filteredLyrics = removeWords(lyrics);
 	}
 
-	/** ADDITIONAL OPERATIONS **/
-
+	/* ADDITIONAL OPERATIONS */
 	/**
 	 * Compares this song to another based on their titles, ignoring case.
 	 * 

@@ -1,9 +1,8 @@
-
 /**
  * CLInterface.java
  * @author Stephen Kyker
- * (suplemental authoring denoted in method javadoc comments)
- * CIS 22C, Group Project
+ * @author Stephen Lin
+ * CIS 22C, Final Project
  */
 
 import java.io.File;
@@ -87,26 +86,34 @@ public class CLInterface {
 	 * Logic controller for a user session, which integrates the frontend Menu class
 	 * with the backend component classes.
 	 * 
-	 * @throws Exception up the stack when a general exception is caught
+	 * @throws Exception up the stack when any Exception occurs, to be handled by sessionHandler()
 	 */
 	private void runSession() throws Exception {
 		// Spin up the search engine and import the songs from file
 		this.amse = new SearchEngine();
-		for (Song song : ImportSongs.fetchSongs()) {
-			this.amse.indexSong(song);
+		try {
+			for (Song song : ImportSongs.fetchSongs()) {
+				this.amse.indexSong(song);
+			}
+		} catch (IOException e) {
+			throw e;
 		}
 
 		// Clear the screen and begin the program
 		this.clearConsole();
-		System.out.println("[LAUNCHING THE ADELE MUSIC SEARCH ENGINE...]\n");
 
 		// Set up the main menu variables
 		int userSelection;
 		String appTitle = "Adele Music Search Engine";
 		String mainMenuTitle = "Main Menu";
 		String borderPattern = "(*)";
-		String[] mainMenuRows = { "Upload a new record", "Delete a record", "Search for a record",
-				"Modify or update a record", "Statistics", "Quit and print records to file" };
+		String[] mainMenuRows = {
+			"Upload a new record",
+			"Delete a record",
+			"Search for a record",
+			"Modify or update a record",
+			"Statistics",
+			"Quit and print records to file" };
 
 		// Launch the main menu loop and capture user input
 		Menu mainMenu = new Menu(CLInterface.keyboardInput, appTitle, mainMenuTitle, mainMenuRows);
@@ -127,13 +134,14 @@ public class CLInterface {
 	/**
 	 * File print for a user session
 	 * 
-	 * @throws Exception up the stack when a general exception is caught
+	 * @throws IOException when file write fails
 	 */
-	private void printRecordsToFile() throws Exception {
+	private void printRecordsToFile() throws IOException {
 		String dirPath = "./exports/";
 		File dir = new File(dirPath);
 		if (!dir.exists() && !dir.mkdir()) {
-			throw new IOException("printRecordsToFile(): Failed to open export directory at '" + dirPath + "'");
+			throw new IOException(
+				"printRecordsToFile(): Failed to open export directory at '" + dirPath + "'");
 		}
 
 		System.out.print("Please enter a filename to export your search engine records to: ");
@@ -142,7 +150,8 @@ public class CLInterface {
 
 		// Don't allow file overwrite to protect previous runs
 		while (file.exists()) {
-			System.out.printf("%nThe file '%s' already exists.%nPlease choose a unique file name: ", fileName);
+			System.out.printf(
+				"%nThe file '%s' already exists.%nPlease choose a unique file name: ", fileName);
 			fileName = keyboardInput.nextLine();
 			file = new File(dirPath + fileName);
 		}
@@ -150,8 +159,9 @@ public class CLInterface {
 		// Print records to file
 		try (PrintWriter pw = new PrintWriter(file)) {
 			pw.print(amse.toString());
-		} catch (Exception e) {
-			throw new Exception("printRecordsToFile(): An error occurred while writing to file.", e);
+		} catch (IOException e) {
+			throw new IOException(
+				"printRecordsToFile(): An error occurred while writing to file.", e);
 		}
 
 		System.out.println("Records exported to '" + dirPath + fileName + "'.");
@@ -163,9 +173,9 @@ public class CLInterface {
 	 * @param userSelection the menu selection made by the user
 	 * @param mainMenu      the menu context
 	 * @return T if user would like to exit, F if not.
-	 * @throws Exception up the stack when a general exception is caught
+	 * @throws IOException up the stack if a file related exception occurs
 	 */
-	private boolean actionHandler(int userSelection, Menu mainMenu) throws Exception {
+	private boolean actionHandler(int userSelection, Menu mainMenu) throws IOException {
 		if (userSelection != 3) { // Don't print if entering the search sub menu
 			System.out.print("[" + mainMenu.getRows()[userSelection - 1] + "]\n");
 		}
@@ -194,7 +204,11 @@ public class CLInterface {
 			System.out.println("Statistic 3: Average year of all songs " + amse.getAverageYear());
 		} else if (userSelection == 6) {
 			// System.out.println("actionHandler() Debug: 'Quit' was selected.");
-			this.printRecordsToFile();
+			try {
+				this.printRecordsToFile();
+			} catch (IOException ioe) {
+				throw ioe;
+			}
 			System.out.print("\nPress \"Enter\" to Exit. ");
 			keyboardInput.nextLine();
 			return true;
@@ -211,7 +225,8 @@ public class CLInterface {
 	}
 
 	/**
-	 * adds a user-specified record to the search engine
+	 * Adds a user-specified record to the search engine
+	 * @param menu the parent menu context
 	 */
 	private void addRecord(Menu menu) {
 		// Display modify menu
@@ -249,7 +264,7 @@ public class CLInterface {
 	}
 
 	/**
-	 * deletes a user-specified record from the search engine
+	 * Deletes a user-specified record from the search engine
 	 */
 	private void deleteRecord() {
 		System.out.print("Enter the primary key (a song's exact title) of a song you would like to delete: ");
@@ -474,9 +489,9 @@ class ImportSongs {
 	 * Imports and parses external song data
 	 * 
 	 * @return the Song objects in an array
-	 * @throws Exception up the stack when a general exception is caught
+	 * @throws IOException when file reading fails
 	 */
-	public static Song[] fetchSongs() throws Exception {
+	public static Song[] fetchSongs() throws IOException {
 		final String DIR_PATH = "./data/";
 		final String PREFIX = "song";
 		final String SUFFIX = ".txt";
@@ -485,8 +500,8 @@ class ImportSongs {
 		// Fetch the raw data from the files
 		try (FileHandler fh = new FileHandler()) {
 			rawData = fh.readDir(DIR_PATH, PREFIX, SUFFIX);
-		} catch (Exception e) {
-			throw new Exception("parse(): Failed to fetch data.", e);
+		} catch (IOException ioe) {
+			throw new IOException("parse(): Failed to fetch data.", ioe);
 		}
 
 		// Read the song count and parse the data
@@ -519,7 +534,7 @@ class ImportSongs {
 				songs[++i] = song;
 			}
 		} catch (Exception e) {
-			throw new Exception("parse(): Failed to parse data.", e);
+			throw new IOException("parse(): Failed to parse data.", e);
 		}
 
 		return songs;

@@ -1,22 +1,27 @@
-import java.util.Objects;
-
 /**
- * Purpose: a wordID class to hold the IDs of unique words for inverted indexing.
+ * WordID.java
  * @author Naman Kumar 
  * @author Jeses Louis
  * CIS 22C, Final Project
  */
+import java.util.Objects;
 
 /**
  * Maps a lowercase word to a unique integer ID for inverted indexing. Equality
  * and hashcode are based only on the word (case-insensitive).
  */
 public class WordID {
+	/**
+	 * The word
+	 */
 	private final String word;
+	/**
+	 * The word's unique ID
+	 */
 	private final int id;
 
 	/**
-	 * constructor that takes in and sets the word and its unique id
+	 * Constructor that takes in and sets the word and its unique id
 	 * 
 	 * @param word the word to set the object to
 	 * @param id   the id to set the object to
@@ -27,7 +32,7 @@ public class WordID {
 	}
 
 	/**
-	 * returns the word
+	 * Returns the word
 	 * 
 	 * @return the word
 	 */
@@ -36,7 +41,7 @@ public class WordID {
 	}
 
 	/**
-	 * returns the id
+	 * Returns the id
 	 * 
 	 * @return the id
 	 */
@@ -45,10 +50,10 @@ public class WordID {
 	}
 
 	/**
-	 * returns whether or not two wordID objects are equal. They are equal if they
-	 * are the same word.
+	 * Returns whether the two wordID objects are equal.
+	 * They are equal if they are the same word.
 	 * 
-	 * @return whether or not they are equal
+	 * @return whether they are equal
 	 */
 	@Override
 	public boolean equals(Object o) {
@@ -56,12 +61,11 @@ public class WordID {
 			return true;
 		if (!(o instanceof WordID))
 			return false;
-		WordID other = (WordID) o;
-		return word.equalsIgnoreCase(other.word);
+		return word.equalsIgnoreCase(((WordID) o).word);
 	}
 
 	/**
-	 * returns the hashcode of the word
+	 * Returns the hashcode of the word
 	 * 
 	 * @return the hashcode of the word
 	 */
@@ -71,7 +75,7 @@ public class WordID {
 	}
 
 	/**
-	 * returns the wordID in a string form by appending id to word with a ->
+	 * Returns the wordID in a string form by appending id to word with a ->
 	 * 
 	 * @return the wordID in string form
 	 */

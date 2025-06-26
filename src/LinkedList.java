@@ -1,17 +1,35 @@
-
 /**
- * Purpose: write a double linked list class
+ * LinkedList.java
  * @author Stephen Lin
- * CIS 22C, Lab 2
+ * CIS 22C, Final Project
  */
 import java.util.NoSuchElementException;
 
+/**
+ * Generic LinkedList class implementation
+ * @param <T> the type of elements stored in the LinkedList
+ */
 public class LinkedList<T> {
+	/**
+	 * Node class implementation
+	 */
 	private class Node {
+		/**
+		 * The node's data
+		 */
 		private T data;
+		/**
+		 * The left connecting node
+		 */
 		private Node next;
+		/**
+		 * The right connecting node
+		 */
 		private Node prev;
-
+		/**
+		 * Constructs a new node
+		 * @param data the generic data to place in the node
+		 */
 		public Node(T data) {
 			this.data = data;
 			this.next = null;
@@ -19,13 +37,24 @@ public class LinkedList<T> {
 		}
 	}
 
+	/**
+	 * The length of the list
+	 */
 	private int length;
+	/**
+	 * The first node of the list
+	 */
 	private Node first;
+	/**
+	 * The last node of the list
+	 */
 	private Node last;
+	/**
+	 * The node used to iterate the list
+	 */
 	private Node iterator;
 
-	/**** CONSTRUCTORS ****/
-
+	/* CONSTRUCTORS */
 	/**
 	 * Instantiates a new LinkedList with default values
 	 * 
@@ -73,8 +102,7 @@ public class LinkedList<T> {
 		}
 	}
 
-	/**** ACCESSORS ****/
-
+	/* ACCESSORS */
 	/**
 	 * Returns the value stored in the first node
 	 * 
@@ -108,7 +136,7 @@ public class LinkedList<T> {
 	 * 
 	 * @precondition iterator is not null
 	 * @return the data stored in the iterator node
-	 * @throw NullPointerException if iterator is null (off end)
+	 * @throws NullPointerException if iterator is null (off end)
 	 */
 	public T getIterator() throws NullPointerException {
 		if (offEnd()) {
@@ -144,8 +172,7 @@ public class LinkedList<T> {
 		return iterator == null;
 	}
 
-	/**** MUTATORS ****/
-
+	/* MUTATORS */
 	/**
 	 * Creates a new first element
 	 * 
@@ -378,10 +405,10 @@ public class LinkedList<T> {
 	 * numMoves = 7 - [4, 5, 1, 2, 3]
 	 * 
 	 * @param numMoves the number of times to move each node.
-	 * @precondition numMoves >= 0
+	 * @precondition numMoves &gt;= 0
 	 * @postcondition iterator position unchanged (i.e. still referencing the same
 	 *                node in the list, regardless of new location of Node)
-	 * @throws IllegalArgumentException when numMoves < 0
+	 * @throws IllegalArgumentException when numMoves &lt; 0
 	 */
 	public void spinList(int numMoves) throws IllegalArgumentException {
 		if (numMoves < 0) {
@@ -480,7 +507,7 @@ public class LinkedList<T> {
 	/**
 	 * advances the iterator to the index
 	 * 
-	 * @precondition index >= 0, index < length
+	 * @precondition index &gt;= 0, index &lt; length
 	 * @param index the index to go to
 	 * @throws IndexOutOfBoundsException when iterator is out of bounds
 	 */

@@ -1,22 +1,30 @@
-
 /**
  * HashTable.java
  * @author Stephen Lin
- * CIS 22C, Lab 13.2
+ * CIS 22C, Final Project
  */
 import java.util.ArrayList;
 
+/**
+ * Generic HashTable class implementation
+ * @param <T> the type of elements stored in the HashTable
+ */
 public class HashTable<T> {
+	/**
+	 * The number of elements stored in the HashTable
+	 */
 	private int numElements;
+	/**
+	 * The data table
+	 */
 	private ArrayList<LinkedList<T>> table;
 
-	/** Constructors */
-
+	/* Constructors */
 	/**
-	 * constructor that takes in a size to make the table
+	 * Constructor that takes in a size to make the table
 	 * 
 	 * @param size size of table
-	 * @throws IllegalArgumentException if size <= 0
+	 * @throws IllegalArgumentException if size &lt;= 0
 	 */
 	public HashTable(int size) throws IllegalArgumentException {
 		if (size <= 0) {
@@ -30,11 +38,11 @@ public class HashTable<T> {
 	}
 
 	/**
-	 * constructor that takes in a size and array to make the table
+	 * Constructor that takes in a size and array to make the table
 	 * 
 	 * @param array the array to use
 	 * @param size  size of table
-	 * @throws IllegalArgumentException if size <= 0
+	 * @throws IllegalArgumentException if size &lt;= 0
 	 */
 	public HashTable(T[] array, int size) throws IllegalArgumentException {
 		this(size);
@@ -47,7 +55,7 @@ public class HashTable<T> {
 	}
 
 	/**
-	 * gets the hash code of the object by taking the hashcode and modding it by the
+	 * Gets the hash code of the object by taking the hashcode and modding it by the
 	 * table size
 	 * 
 	 * @param obj the object to hash
@@ -57,9 +65,9 @@ public class HashTable<T> {
 		return Math.abs(obj.hashCode() % table.size());
 	}
 
-	/** Accessors */
+	/* Accessors */
 	/**
-	 * returns nnum of elements
+	 * Returns num of elements
 	 * 
 	 * @return num of elements
 	 */
@@ -68,11 +76,11 @@ public class HashTable<T> {
 	}
 
 	/**
-	 * returns number of elements at this bucket
+	 * Returns number of elements at this bucket
 	 * 
 	 * @param bucket the bucket to check
 	 * @return size of bucket
-	 * @throws IndexOutOfBoundsException if bucket < 0 or bucket >= table.size
+	 * @throws IndexOutOfBoundsException if bucket &lt; 0 or bucket &gt;= table.size
 	 */
 	public int countBucket(int bucket) throws IndexOutOfBoundsException {
 		if (bucket < 0 || bucket >= table.size()) {
@@ -82,7 +90,7 @@ public class HashTable<T> {
 	}
 
 	/**
-	 * checks if the hashtable contains an element
+	 * Checks if the hashtable contains an element
 	 * 
 	 * @param element the element to check
 	 * @return if it contains the element
@@ -92,7 +100,7 @@ public class HashTable<T> {
 	}
 
 	/**
-	 * returns load factor: numElements / numBuckets
+	 * Returns load factor: numElements / numBuckets
 	 * 
 	 * @return load factor
 	 */
@@ -101,10 +109,10 @@ public class HashTable<T> {
 	}
 
 	/**
-	 * checks if an element exists in table or not
+	 * Checks if an element exists in table or not
 	 * 
 	 * @param element the element to check for
-	 * @return the bucket of the element or -1 if doesn't exist
+	 * @return the bucket of the element or -1 if it doesn't exist
 	 * @throws NullPointerException element is null
 	 */
 	public int find(T element) throws NullPointerException {
@@ -128,7 +136,7 @@ public class HashTable<T> {
 	}
 
 	/**
-	 * gets the element if it exists
+	 * Gets the element if it exists
 	 * 
 	 * @param element the element to check for
 	 * @return the element if it exists, null if not
@@ -171,9 +179,9 @@ public class HashTable<T> {
 		return elements;
 	}
 
-	/** Mutators */
+	/* Mutators */
 	/**
-	 * adds an element to the list
+	 * Adds an element to the list
 	 * 
 	 * @param element the element to add
 	 * @throws NullPointerException element is null
@@ -188,7 +196,7 @@ public class HashTable<T> {
 	}
 
 	/**
-	 * deletes an element from the hashtable
+	 * Deletes an element from the hashtable
 	 * 
 	 * @param element the element to delete
 	 * @throws NullPointerException if element is null
@@ -213,7 +221,7 @@ public class HashTable<T> {
 	}
 
 	/**
-	 * clears the hashtable
+	 * Clears the hashtable
 	 */
 	public void clear() {
 		numElements = 0;
@@ -222,13 +230,13 @@ public class HashTable<T> {
 		}
 	}
 
-	/** Additional Methods */
+	/* Additional Methods */
 	/**
-	 * returns the buckets contents as a string
+	 * Returns the buckets contents as a string
 	 * 
 	 * @param bucket the bucket to return as a string
 	 * @return a string of the buckets contents
-	 * @throws IndexOutOfBoundsException bucket < 0 or bucket >= table.size
+	 * @throws IndexOutOfBoundsException bucket &lt; 0 or bucket &gt;= table.size
 	 */
 	public String bucketToString(int bucket) throws IndexOutOfBoundsException {
 		if (bucket < 0 || bucket >= table.size()) {
@@ -238,7 +246,7 @@ public class HashTable<T> {
 	}
 
 	/**
-	 * string of bucket number, then colon, then first element in row
+	 * String of bucket number, then colon, then first element in row
 	 * 
 	 * @return the string of the bucket number: first element in row
 	 */
@@ -257,7 +265,7 @@ public class HashTable<T> {
 	}
 
 	/**
-	 * tostring of the hashtable
+	 * A toString override for the hashtable
 	 * 
 	 * @return all elements in a string with newlines
 	 */

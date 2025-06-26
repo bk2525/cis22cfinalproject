@@ -1,20 +1,15 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Scanner;
-
 /**
- * Purpose: a driver class as an entry-point to the program
+ * Driver.java
  * @author Stephen Kyker
  * CIS 22C, Final Project
  */
 
 /**
- * This class is responsible for driving the program
+ * Class used for entry point only
  */
 public class Driver {
 	/**
-	 * The minimum required JRE version supported by this program; Java 11 or later
-	 * is strongly recommended
+	 * The minimum required JRE version we wish to support
 	 */
 	private static final String REQUIRED_VERSION = "11";
 
@@ -39,14 +34,16 @@ public class Driver {
 	/**
 	 * Checks whether the user's Java Runtime Environment is a version supported by
 	 * this program. This method is compatible with legacy environments dating back
-	 * to Java 1.1 (1997). Method implemented by Stephen Kyker. Contact for
-	 * questions.
+	 * to Java 1.1 (1997).
 	 *
-	 * @throws NullPointerException  if either parameter is null
-	 * @throws NumberFormatException if either version failed to parse
-	 * @throws IllegalStateException if version requirement not met
+	 * @throws NullPointerException  when either parameter is null
+	 * @throws NumberFormatException when either version failed to parse
+	 * @throws IllegalStateException when version requirement not met
 	 */
-	private static void checkVersion() throws NullPointerException, NumberFormatException, IllegalStateException {
+	private static void checkVersion()
+		throws NullPointerException,
+		NumberFormatException,
+		IllegalStateException {
 
 		// Localize
 		String reqVersion = Driver.REQUIRED_VERSION;
@@ -55,7 +52,9 @@ public class Driver {
 		// Null check
 		if (reqVersion == null || javaVersion == null) {
 			throw new NullPointerException(String.format(
-					"checkVersion(): Strings must be non-null.%n" + "  reqVersion:  %s%n" + "  javaVersion: %s%n",
+					"checkVersion(): Strings must be non-null.%n"
+					+ "  reqVersion:  %s%n"
+					+ "  javaVersion: %s%n",
 					reqVersion, javaVersion));
 		}
 
@@ -82,14 +81,19 @@ public class Driver {
 		// Attempt to parse and compare to the required version
 		try {
 			if (Integer.parseInt(runtimeVersion) < Integer.parseInt(reqVersion)) {
-				throw new IllegalStateException(String.format("checkVersion(): Unsupported Java version.%n"
-						+ "  Minimum supported runtime version: %s%n" + "  Current runtime version:           %s%n",
-						reqVersion, runtimeVersion));
+				throw new IllegalStateException(String.format(
+					"checkVersion(): Unsupported Java version.%n"
+					+ "  Minimum supported runtime version: %s%n"
+					+ "  Current runtime version:           %s%n",
+					reqVersion, runtimeVersion));
 			}
 		} catch (NumberFormatException nfe) {
-			throw new NumberFormatException(
-					String.format("checkVersion(): Version parse and compare failed " + "due to an invalid format.%n"
-							+ "  reqVersion:     %s%n" + "  runtimeVersion: %s%n", reqVersion, runtimeVersion));
+			throw new NumberFormatException(String.format(
+				"checkVersion(): Version parse and compare failed "
+				+ "due to an invalid format.%n"
+				+ "  reqVersion:     %s%n"
+				+ "  runtimeVersion: %s%n",
+				reqVersion, runtimeVersion));
 		}
 	}
 }
